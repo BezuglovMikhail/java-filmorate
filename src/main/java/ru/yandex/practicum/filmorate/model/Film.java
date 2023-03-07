@@ -1,10 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.*;
-import java.time.Duration;
 import java.time.LocalDate;
 
 @Data
@@ -15,7 +13,7 @@ public class Film {
     @NotBlank
     private String name;
 
-    //@Max(200)
+    @Size(max = 200)
     private String description;
 
     @Past

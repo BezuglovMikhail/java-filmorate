@@ -28,6 +28,4 @@ public class UserRepository {
             users.put(user.getId(), user);
         }
     }
-
-
 }

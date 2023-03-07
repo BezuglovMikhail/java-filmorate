@@ -17,13 +17,11 @@ public class FilmRepository {
     }
 
     public void saveFilm(Film film) {
-        //if (validateFilm(film)) {
             if (films.containsKey(film.getId())) {
                 films.put(film.getId(), film);
             } else {
                 film.setId(generateId());
                 films.put(film.getId(), film);
-            //}
         }
     }
 
