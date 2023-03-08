@@ -17,18 +17,23 @@ public class FilmRepository {
     }
 
     public void saveFilm(Film film) {
+        if (validateFilm (film)) {
             if (films.containsKey(film.getId())) {
                 films.put(film.getId(), film);
             } else {
                 film.setId(generateId());
                 films.put(film.getId(), film);
+            }
         }
     }
 
     public boolean validateFilm (Film film) {
-        if (film.getReleaseDate().isAfter(LocalDate.parse("28.12.1895"))) {
-            throw new ValidationException("Дата релиза не может быть позже :" + LocalDate.parse("28.12.1895"));
-                    }
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
+        }
+        if (!getFilms().containsKey(film.getId()) && film.getId() != 0) {
+            throw new ValidationException("Фильма с id = " + film.getId() + " нет.");
+        }
         return true;
     }
 }

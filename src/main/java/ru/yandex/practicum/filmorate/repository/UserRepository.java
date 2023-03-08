@@ -16,16 +16,25 @@ public class UserRepository {
     }
 
     public void saveUser(User user) {
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-        } else if (!users.containsKey(user.getId()) && user.getId() != 0) {
-            throw new ValidationException("Пользователя с id = " + user.getId() + " нет.");
-        } else {
-            if (user.getName() == null) {
-                user.setName(user.getLogin());
+        if (validateUser(user)) {
+            if (users.containsKey(user.getId())) {
+                users.put(user.getId(), user);
+                //} else if (!users.containsKey(user.getId()) && user.getId() != 0) {
+                //throw new ValidationException("Пользователя с id = " + user.getId() + " нет.");
+            } else {
+                if (user.getName() == null) {
+                    user.setName(user.getLogin());
+                }
+                user.setId(generateId());
+                users.put(user.getId(), user);
             }
-            user.setId(generateId());
-            users.put(user.getId(), user);
         }
+    }
+
+    public boolean validateUser(User user) {
+        if (!users.containsKey(user.getId()) && user.getId() != 0) {
+            throw new ValidationException("Пользователя с id = " + user.getId() + " нет.");
+        }
+        return true;
     }
 }
