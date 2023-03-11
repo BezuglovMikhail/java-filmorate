@@ -10,28 +10,31 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
+@RequestMapping("/films")
 @Slf4j
 public class FilmController {
     FilmRepository filmRepository = new FilmRepository();
 
-    @GetMapping("/films")
+    @GetMapping
     public Collection<Film> findAll() {
-        log.debug("Текущее количество пользователей: {}", filmRepository.getFilms().size());
+        log.debug("Текущее количество фильмов: {}", filmRepository.getFilms().size());
         return filmRepository.getFilms().values();
     }
 
-    @PostMapping(value = "films")
+    @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         filmRepository.saveFilm(film);
+        log.debug("Добавлен фильм с id = {}", film.getId());
         return film;
     }
 
-    @PutMapping(value = "films")
+    @PutMapping
     public Film appDate(@Valid @RequestBody Film film) {
         if (!filmRepository.getFilms().containsKey(film.getId()) && film.getId() != 0) {
             throw new ValidationException("Фильма с id = " + film.getId() + " нет.");
         }
         filmRepository.saveFilm(film);
+        log.debug("Обнавлён фильм с id = {}", film.getId());
         return film;
     }
 }

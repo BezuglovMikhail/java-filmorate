@@ -27,7 +27,7 @@ public class FilmRepository {
         }
     }
 
-    public boolean validateFilm (Film film) {
+   public boolean validateFilm (Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
         }

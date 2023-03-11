@@ -15,8 +15,6 @@ public class Film {
 
     @Size(max = 200)
     private String description;
-
-    @Past
     private LocalDate releaseDate;
 
     @Positive
