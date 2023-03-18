@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.UserStorage.UserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    UserRepository userRepository = new UserRepository();
+    UserStorage userRepository = new UserStorage();
 
     @GetMapping
     public Collection<User> findAll() {

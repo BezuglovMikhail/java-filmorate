@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.FilmStorage;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 @Data
-public class FilmRepository {
+public class FilmStorage {
     private HashMap<Integer, Film> films = new HashMap<>();
     private int idFilm = 0;
 

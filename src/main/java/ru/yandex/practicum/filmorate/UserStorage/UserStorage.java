@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.UserStorage;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.HashMap;
 
 @Data
-public class UserRepository {
+public class UserStorage {
     private HashMap<Integer, User> users = new HashMap<>();
     private int idUser = 0;
 

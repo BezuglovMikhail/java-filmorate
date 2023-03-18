@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.FilmStorage.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Collection;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    FilmRepository filmRepository = new FilmRepository();
+    FilmStorage filmRepository = new FilmStorage();
 
     @GetMapping
     public Collection<Film> findAll() {
