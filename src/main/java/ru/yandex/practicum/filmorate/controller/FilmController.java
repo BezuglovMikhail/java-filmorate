@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.FilmStorage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.FilmStorage.FilmStorage;
@@ -13,7 +14,7 @@ import java.util.Collection;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    FilmStorage filmRepository = new FilmStorage();
+    FilmStorage filmRepository = new InMemoryFilmStorage();
 
     @GetMapping
     public Collection<Film> findAll() {

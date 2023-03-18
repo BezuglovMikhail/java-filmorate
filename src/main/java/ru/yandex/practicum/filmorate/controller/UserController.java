@@ -12,7 +12,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    UserStorage userRepository = new UserStorage();
+   // UserStorage userRepository = new UserStorage();
 
     @GetMapping
     public Collection<User> findAll() {
