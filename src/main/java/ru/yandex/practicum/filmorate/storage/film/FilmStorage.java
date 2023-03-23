@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.FilmStorage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
@@ -9,9 +9,11 @@ import java.util.HashMap;
 
 public interface FilmStorage {
 
-    public int generateId();
+    long generateId();
 
-    public void saveFilm(Film film);
+    void saveFilm(Film film);
 
-   public boolean validateFilm (Film film);
+   boolean validateFilm (Film film);
+   HashMap<Long, Film> getFilms();
+   Long getFilmId();
 }

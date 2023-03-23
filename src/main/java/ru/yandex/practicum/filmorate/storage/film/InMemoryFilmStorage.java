@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.FilmStorage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -9,14 +9,13 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 @Component
-@Data
 public class InMemoryFilmStorage implements FilmStorage{
 
-    private HashMap<Integer, Film> films = new HashMap<>();
-    private int idFilm = 0;
+    private HashMap<Long, Film> films = new HashMap<>();
+    private long idFilm = 0;
 
     @Override
-    public int generateId() {
+    public long generateId() {
         return ++idFilm;
     }
 
@@ -41,5 +40,15 @@ public class InMemoryFilmStorage implements FilmStorage{
             throw new ValidationException("Фильма с id = " + film.getId() + " нет.");
         }
         return true;
+    }
+
+    @Override
+    public HashMap<Long, Film> getFilms() {
+        return films;
+    }
+
+    @Override
+    public Long getFilmId() {
+        return idFilm;
     }
 }

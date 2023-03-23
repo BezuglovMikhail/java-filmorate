@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.UserStorage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -8,10 +8,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.HashMap;
 
 @Component
-//@Data
 public class InMemoryUserStorage implements UserStorage {
     private HashMap<Long, User> users = new HashMap<>();
-    private int idUser = 0;
+    private long idUser = 0;
 
     @Override
     public long generateId() {
@@ -39,12 +38,14 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return true;
     }
- @Override
+
+    @Override
     public HashMap<Long, User> getUsers() {
         return users;
     }
-@Override
-    public long getIdUser() {
+
+    @Override
+    public Long getUserId() {
         return idUser;
     }
 }

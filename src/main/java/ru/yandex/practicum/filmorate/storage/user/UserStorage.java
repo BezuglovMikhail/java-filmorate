@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.UserStorage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashMap;
@@ -14,8 +15,6 @@ public interface UserStorage {
     void saveUser(User user);
 
     boolean validateUser(User user);
-
     HashMap<Long, User> getUsers();
-
-    public long getIdUser();
+    Long getUserId();
 }
