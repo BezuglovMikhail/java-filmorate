@@ -39,25 +39,6 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    /*public List<Post> findAll(Integer size, Integer from, String sort) {
-        return posts.stream()
-                .sorted((p0, p1) -> compare(p0, p1, sort))
-                .skip(from)
-                .limit(size)
-                .collect(Collectors.toList());
-    }
-
-    public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
-        return posts.stream()
-                .filter(p -> email.equals(p.getAuthor()))
-                .sorted((p0, p1) -> compare(p0, p1, sort))
-                .limit(size)
-                .collect(Collectors.toList());
-    }
-
-    private static Integer getNextId() {
-        return globalId++;
-    }*/
 
     private int compare(Film p0, Film p1) {
         if (p0.getLikes().size() == p1.getLikes().size()) {

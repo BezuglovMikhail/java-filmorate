@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -37,7 +38,7 @@ public class InMemoryFilmStorage implements FilmStorage{
             throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
         }
         if (!getFilms().containsKey(film.getId()) && film.getId() != 0) {
-            throw new ValidationException("Фильма с id = " + film.getId() + " нет.");
+            throw new FilmNotFoundException("Фильма с id = " + film.getId() + " нет.");
         }
         return true;
     }

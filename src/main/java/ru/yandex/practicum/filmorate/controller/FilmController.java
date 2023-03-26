@@ -3,6 +3,9 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -31,6 +34,9 @@ public class FilmController {
 
     @GetMapping("/{filmId}")
     public Optional<Film> findById(@PathVariable long filmId) {
+        if (!filmService.getFilmStorage().getFilms().containsKey(filmId)) {
+            throw new FilmNotFoundException(String.format("Пользователь %s не найден", filmId));
+        }
         return filmService.getFilmStorage().getFilms().values().stream()
                 .filter(x -> x.getId() == filmId)
                 .findFirst();
@@ -53,19 +59,28 @@ public class FilmController {
         return filmService.getFilmStorage().getFilms().get(film.getId());
     }
 
-    @PutMapping ("/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public Film addFriends(
-            @RequestParam(value = "id") Long id,
-            @RequestParam(value = "userId") Long userId
+            @PathVariable(value = "id") Long id,
+            @PathVariable(value = "userId") Long userId
     ) {
         filmService.addLike(id, userId);
-        log.debug("Пользователь с id = {userId} поставил лайк фильму с id = {id}");
+        log.debug("Пользователь с id = {} поставил лайк фильму с id = {}", id, userId);
         return filmService.getFilmStorage().getFilms().get(id);
     }
 
-    @GetMapping("/popular?count={count}")
+    @DeleteMapping("/{id}/like/{userId}")
+    public void dellFriends(
+            @PathVariable(value = "id") Long id,
+            @PathVariable(value = "userId") Long userId
+    ) {
+        filmService.deleteLike(id, userId);
+        log.debug("Пользователь с id = {} удалил лайк фильму с id = {}", userId, id);
+    }
+
+    @GetMapping("/popular")
     public List<Film> findPopularFilms(
-            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+            @RequestParam(defaultValue = "10", required = false) Integer count) {
 
         if (count <= 0) {
             throw new IllegalArgumentException();

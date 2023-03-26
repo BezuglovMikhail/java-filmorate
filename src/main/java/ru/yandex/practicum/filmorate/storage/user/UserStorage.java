@@ -17,4 +17,6 @@ public interface UserStorage {
     boolean validateUser(User user);
     HashMap<Long, User> getUsers();
     Long getUserId();
+
+    void addFriend(long id, long idNewFriend);
 }

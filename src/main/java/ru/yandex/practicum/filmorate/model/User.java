@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 public class User {
@@ -27,5 +30,5 @@ public class User {
     @Past
     private LocalDate birthday;
 
-    private Set<Long> friends;
+    Set<Long> friends = new HashSet<>();
 }

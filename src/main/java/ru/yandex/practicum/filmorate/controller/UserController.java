@@ -3,15 +3,16 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.lang.Long.compare;
 
 @RestController
 @RequestMapping("/users")
@@ -32,39 +33,58 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public Optional<User> findById(@PathVariable long userId) {
+        if (!userService.getUserStorage().getUsers().containsKey(userId)) {
+            throw new UserNotFoundException(String.format(
+                    "Пользователь %s не найден",
+                    userId));
+        }
         return userService.getUserStorage().getUsers().values().stream()
                 .filter(x -> x.getId() == userId)
                 .findFirst();
     }
 
-    @GetMapping("/{id}")
-    public Set<Long> findFriendsById(@PathVariable long id) {
+    @GetMapping("/{id}/friends")
+    public Set<User> findFriendsById(@PathVariable long id) {
         return userService.getUserStorage().getUsers().values().stream()
-                .filter(x -> x.getId() == id)
-                .findFirst().get().getFriends();
+                .filter(x -> userService.getUserStorage().getUsers().get(id).getFriends().contains(x.getId()))
+                .collect(Collectors.toSet());
     }
 
-
-    @PutMapping ("/{id}/friends/{friendId}")
-    public User addFriends(
-            @RequestParam(value = "id") Long id,
-            @RequestParam(value = "friendId") Long friendId
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> findGeneralFriends(
+            @PathVariable(value = "id") Long id,
+            @PathVariable(value = "otherId") Long otherId
     ) {
-        userService.addFriend(id, friendId);
-        log.debug("Пользователь с id = {friendId} добавлен в друзья пользователю id = {id}");
+       /*List<Long> generalFriends = userService.getUserStorage().getUsers().get(id).getFriends().stream()
+                .filter(userService.getUserStorage().getUsers().get(otherId).getFriends()::contains)
+                .sorted((p0, p1) -> compare(p0, p1))
+                .collect(Collectors.toList());
+
+        return userService.getUserStorage().getUsers().values().stream()
+                .filter(x -> generalFriends.contains(x.getId()))
+                .collect(Collectors.toList());*/
+        return userService.findAllGenerateFriends(id, otherId);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriends(
+            @PathVariable(value = "id") Long id,
+            @PathVariable(value = "friendId") Long friendId
+    ) {
+        userService.createFriend(id, friendId);
+        log.debug("Пользователь с id = {} добавлен в друзья пользователю id = {}", friendId, id);
         return userService.getUserStorage().getUsers().get(friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public User dellFriends(
-            @RequestParam(value = "id") Long userId,
-            @RequestParam(value = "friendId") Long friendId
+            @PathVariable(value = "id") Long userId,
+            @PathVariable(value = "friendId") Long friendId
     ) {
         userService.deleteFriend(userId, friendId);
-        log.debug("Пользователь с id = {friendId} удален из друзей пользователя id = {id}");
+        log.debug("Пользователь с id = {} удален из друзей пользователя id = {}", friendId, userId);
         return userService.getUserStorage().getUsers().get(friendId);
     }
-
 
 
     @PostMapping
