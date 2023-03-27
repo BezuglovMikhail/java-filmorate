@@ -13,8 +13,8 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
-   InMemoryUserStorage userStorage = new InMemoryUserStorage();
-   UserService userService = new UserService(userStorage);
+    InMemoryUserStorage userStorage = new InMemoryUserStorage();
+    UserService userService = new UserService(userStorage);
 
     @BeforeEach
     void createUsersForTest() throws IOException, InterruptedException {
@@ -40,7 +40,7 @@ class UserServiceTest {
         user2.setEmail("mailrtweryyj@mail.ru");
         user2.setName("Nikyfkeryh");
         user2.setLogin("Login678678");
-        user2.setBirthday(LocalDate.of(2001, 10,30 ));
+        user2.setBirthday(LocalDate.of(2001, 10, 30));
 
         userStorage.saveUser(user);
         userStorage.saveUser(user2);

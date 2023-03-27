@@ -135,8 +135,8 @@ class FilmServiceTest {
     @Test
     void addLike() {
 
-        filmService.addLike(1,1);
-        filmService.addLike(2,1);
+        filmService.addLike(1, 1);
+        filmService.addLike(2, 1);
 
         assertEquals(Set.of(1L, 2L), filmStorage.getFilms().get(1L).getLikes());
         assertEquals(2, filmStorage.getFilms().get(1L).getLikes().size());
@@ -144,12 +144,12 @@ class FilmServiceTest {
 
     @Test
     void deleteLike() {
-        filmService.addLike(1,1);
-        filmService.addLike(2,1);
-        filmService.addLike(3,1);
-        filmService.addLike(4,1);
-        filmService.addLike(2,2);
-        filmService.addLike(3,2);
+        filmService.addLike(1, 1);
+        filmService.addLike(2, 1);
+        filmService.addLike(3, 1);
+        filmService.addLike(4, 1);
+        filmService.addLike(2, 2);
+        filmService.addLike(3, 2);
 
         filmService.deleteLike(1, 1);
         filmService.deleteLike(2, 2);
@@ -161,28 +161,28 @@ class FilmServiceTest {
 
     @Test
     void findPopularFilms() {
-        filmService.addLike(1,10);
-        filmService.addLike(2,10);
-        filmService.addLike(3,10);
-        filmService.addLike(4,10);
-        filmService.addLike(2,2);
-        filmService.addLike(3,2);
-        filmService.addLike(1,1);
-        filmService.addLike(2,3);
-        filmService.addLike(3,4);
-        filmService.addLike(4,5);
-        filmService.addLike(2,6);
-        filmService.addLike(3,7);
-        filmService.addLike(4,7);
-        filmService.addLike(1,8);
-        filmService.addLike(2,8);
-        filmService.addLike(3,8);
-        filmService.addLike(4,9);
+        filmService.addLike(1, 10);
+        filmService.addLike(2, 10);
+        filmService.addLike(3, 10);
+        filmService.addLike(4, 10);
+        filmService.addLike(2, 2);
+        filmService.addLike(3, 2);
+        filmService.addLike(1, 1);
+        filmService.addLike(2, 3);
+        filmService.addLike(3, 4);
+        filmService.addLike(4, 5);
+        filmService.addLike(2, 6);
+        filmService.addLike(3, 7);
+        filmService.addLike(4, 7);
+        filmService.addLike(1, 8);
+        filmService.addLike(2, 8);
+        filmService.addLike(3, 8);
+        filmService.addLike(4, 9);
 
         assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
-                filmService.getFilmStorage().getFilms().get(8L),
-                filmService.getFilmStorage().getFilms().get(2L),
-                filmService.getFilmStorage().getFilms().get(7L)),
+                        filmService.getFilmStorage().getFilms().get(8L),
+                        filmService.getFilmStorage().getFilms().get(2L),
+                        filmService.getFilmStorage().getFilms().get(7L)),
                 filmService.findPopularFilms(4));
         assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
                 filmService.getFilmStorage().getFilms().get(8L),

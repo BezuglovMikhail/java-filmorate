@@ -2,11 +2,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -135,10 +132,4 @@ class UserStorageTest {
         assertEquals(usersTest, userStorage.getUsers());
         assertEquals(2, userStorage.getUsers().size());
     }
-
-
-
-
-
 }
-

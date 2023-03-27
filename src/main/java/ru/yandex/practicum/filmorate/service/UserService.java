@@ -17,7 +17,7 @@ public class UserService {
     private UserStorage userStorage;
 
     @Autowired
-     public UserService(InMemoryUserStorage inMemoryUserStorage) {
+    public UserService(InMemoryUserStorage inMemoryUserStorage) {
         this.userStorage = inMemoryUserStorage;
     }
 
@@ -35,7 +35,9 @@ public class UserService {
 
     public List<User> findAllGenerateFriends(long id, long otherId) {
         List<Long> generalFriends = getUserStorage().getUsers().get(id).getFriends().stream()
-                .filter(getUserStorage().getUsers().get(otherId).getFriends()::contains)
+                .filter(getUserStorage()
+                .getUsers().get(otherId)
+                .getFriends()::contains)
                 .collect(Collectors.toList());
 
         return getUserStorage().getUsers().values().stream()
