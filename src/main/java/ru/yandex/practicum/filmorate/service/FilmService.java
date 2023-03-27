@@ -42,10 +42,10 @@ public class FilmService {
         if (p0.getLikes().size() == p1.getLikes().size()) {
             return 0;
         }
-        if (p0.getLikes().size() < p1.getLikes().size()) {
+        if (p0.getLikes().size() > p1.getLikes().size()) {
             return 1;
         }
-        if (p0.getLikes().size() > p1.getLikes().size()) {
+        if (p0.getLikes().size() < p1.getLikes().size()) {
             return -1;
         }
         return -2;
