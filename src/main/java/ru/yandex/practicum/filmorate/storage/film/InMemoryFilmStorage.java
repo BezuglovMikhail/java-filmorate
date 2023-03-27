@@ -12,7 +12,7 @@ import java.util.HashMap;
 @Component
 public class InMemoryFilmStorage implements FilmStorage{
 
-    private HashMap<Long, Film> films = new HashMap<>();
+    private final HashMap<Long, Film> films = new HashMap<>();
     private long idFilm = 0;
 
     @Override
@@ -48,8 +48,5 @@ public class InMemoryFilmStorage implements FilmStorage{
         return films;
     }
 
-    @Override
-    public Long getFilmId() {
-        return idFilm;
-    }
+
 }

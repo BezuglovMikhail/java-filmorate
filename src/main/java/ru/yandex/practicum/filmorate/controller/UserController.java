@@ -4,15 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.lang.Long.compare;
 
 @RestController
 @RequestMapping("/users")
@@ -44,10 +41,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public Set<User> findFriendsById(@PathVariable long id) {
+    public List<User> findFriendsById(@PathVariable long id) {
         return userService.getUserStorage().getUsers().values().stream()
                 .filter(x -> userService.getUserStorage().getUsers().get(id).getFriends().contains(x.getId()))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(User::getId))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
@@ -55,14 +53,6 @@ public class UserController {
             @PathVariable(value = "id") Long id,
             @PathVariable(value = "otherId") Long otherId
     ) {
-       /*List<Long> generalFriends = userService.getUserStorage().getUsers().get(id).getFriends().stream()
-                .filter(userService.getUserStorage().getUsers().get(otherId).getFriends()::contains)
-                .sorted((p0, p1) -> compare(p0, p1))
-                .collect(Collectors.toList());
-
-        return userService.getUserStorage().getUsers().values().stream()
-                .filter(x -> generalFriends.contains(x.getId()))
-                .collect(Collectors.toList());*/
         return userService.findAllGenerateFriends(id, otherId);
     }
 

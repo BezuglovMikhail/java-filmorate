@@ -6,7 +6,6 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Data
 public class Film {
@@ -23,5 +22,5 @@ public class Film {
     @Positive
     private int duration;
 
-    Set<Long> likes = new HashSet<>();
+    private Set<Long> likes = new HashSet<>();
 }
