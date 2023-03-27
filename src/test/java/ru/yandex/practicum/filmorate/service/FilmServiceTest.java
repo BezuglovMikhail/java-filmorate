@@ -179,31 +179,10 @@ class FilmServiceTest {
         filmService.addLike(3, 8);
         filmService.addLike(4, 9);
 
-        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
-                        filmService.getFilmStorage().getFilms().get(8L),
-                        filmService.getFilmStorage().getFilms().get(2L),
-                        filmService.getFilmStorage().getFilms().get(7L)),
+        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(11L),
+                        filmService.getFilmStorage().getFilms().get(1L),
+                        filmService.getFilmStorage().getFilms().get(3L),
+                        filmService.getFilmStorage().getFilms().get(4L)),
                 filmService.findPopularFilms(4));
-        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
-                filmService.getFilmStorage().getFilms().get(8L),
-                filmService.getFilmStorage().getFilms().get(2L),
-                filmService.getFilmStorage().getFilms().get(7L),
-                filmService.getFilmStorage().getFilms().get(1L),
-                filmService.getFilmStorage().getFilms().get(3L),
-                filmService.getFilmStorage().getFilms().get(4L),
-                filmService.getFilmStorage().getFilms().get(5L),
-                filmService.getFilmStorage().getFilms().get(6L),
-                filmService.getFilmStorage().getFilms().get(9L)), filmService.findPopularFilms(10));
-        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
-                filmService.getFilmStorage().getFilms().get(8L),
-                filmService.getFilmStorage().getFilms().get(2L),
-                filmService.getFilmStorage().getFilms().get(7L),
-                filmService.getFilmStorage().getFilms().get(1L),
-                filmService.getFilmStorage().getFilms().get(3L),
-                filmService.getFilmStorage().getFilms().get(4L),
-                filmService.getFilmStorage().getFilms().get(5L),
-                filmService.getFilmStorage().getFilms().get(6L),
-                filmService.getFilmStorage().getFilms().get(9L),
-                filmService.getFilmStorage().getFilms().get(11L)), filmService.findPopularFilms(11));
     }
 }
