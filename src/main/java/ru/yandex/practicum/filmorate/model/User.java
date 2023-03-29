@@ -8,10 +8,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
-    private int id;
+    private long id;
 
     @Email
     @NotNull
@@ -25,4 +27,6 @@ public class User {
 
     @Past
     private LocalDate birthday;
+
+    private Set<Long> friends = new HashSet<>();
 }
