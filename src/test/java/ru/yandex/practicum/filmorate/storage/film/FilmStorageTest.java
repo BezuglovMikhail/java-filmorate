@@ -87,7 +87,6 @@ class FilmStorageTest {
         assertEquals(LocalDate.of(2025, 11, 6), filmStorage.getFilms().get(1L).getReleaseDate());
     }
 
-
     @Test
     void validateFalseTest() {
         Film film = new Film();

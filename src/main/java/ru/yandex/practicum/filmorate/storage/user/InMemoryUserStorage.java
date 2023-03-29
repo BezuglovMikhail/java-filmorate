@@ -18,7 +18,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void saveUser(User user) {
+    public Optional<User> saveUser(User user) {
         if (validateUser(user)) {
             if (users.containsKey(user.getId())) {
                 users.put(user.getId(), user);
@@ -30,6 +30,9 @@ public class InMemoryUserStorage implements UserStorage {
                 users.put(user.getId(), user);
             }
         }
+        return users.values().stream()
+                .filter(x -> Objects.equals(x.getEmail(), user.getEmail()))
+                .findFirst();
     }
 
     @Override

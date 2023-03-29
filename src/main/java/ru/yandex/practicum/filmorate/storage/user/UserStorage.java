@@ -3,11 +3,12 @@ package ru.yandex.practicum.filmorate.storage.user;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public interface UserStorage {
     long generateId();
 
-    void saveUser(User user);
+    Optional<User> saveUser(User user);
 
     boolean validateUser(User user);
 

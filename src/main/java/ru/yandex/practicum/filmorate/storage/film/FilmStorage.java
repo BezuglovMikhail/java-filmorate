@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate.storage.film;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.HashMap;
-
+import java.util.Optional;
 public interface FilmStorage {
 
     long generateId();
 
-    void saveFilm(Film film);
+    Optional<Film> saveFilm(Film film);
 
     boolean validateFilm(Film film);
 

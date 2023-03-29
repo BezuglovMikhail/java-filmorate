@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -19,7 +21,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void saveFilm(Film film) {
+    public Optional<Film> saveFilm(Film film) {
         if (validateFilm(film)) {
             if (films.containsKey(film.getId())) {
                 films.put(film.getId(), film);
@@ -28,6 +30,9 @@ public class InMemoryFilmStorage implements FilmStorage {
                 films.put(film.getId(), film);
             }
         }
+        return films.values().stream()
+                .filter(x -> Objects.equals(x.getName(), film.getName()))
+                .findFirst();
     }
 
     @Override

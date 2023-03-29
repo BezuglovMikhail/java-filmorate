@@ -2,6 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
@@ -10,16 +13,17 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmServiceTest {
 
     InMemoryUserStorage userStorage = new InMemoryUserStorage();
     InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
-    UserService userService = new UserService(userStorage);
-    FilmService filmService = new FilmService(filmStorage);
+    FilmService filmService = new FilmService(filmStorage, userStorage);
 
     @BeforeEach
     void createUsersFilmsForTest() throws IOException, InterruptedException {
@@ -63,7 +67,6 @@ class FilmServiceTest {
         film2.setReleaseDate(LocalDate.of(1994, 11, 6));
         film2.setDuration(90);
 
-
         Film film3 = new Film();
         film3.setName("rshrsh");
         film3.setDescription("dthjrtjryjkryk)");
@@ -100,7 +103,6 @@ class FilmServiceTest {
         film8.setReleaseDate(LocalDate.of(2005, 11, 6));
         film8.setDuration(90);
 
-
         Film film9 = new Film();
         film9.setName("rtjktyuk8yui");
         film9.setDescription("rtysirityi)");
@@ -133,23 +135,81 @@ class FilmServiceTest {
     }
 
     @Test
-    void addLike() {
+    void addFilmTest() {
+        Film film12 = new Film();
+        film12.setName("Пушка");
+        film12.setDescription("........");
+        film12.setReleaseDate(LocalDate.of(2235, 11, 6));
+        film12.setDuration(90);
 
+        filmStorage.saveFilm(film12);
+
+        film12.setId(12);
+        assertEquals(film12, filmStorage.getFilms().get(12L));
+    }
+
+    @Test
+    void addFilmAndAppDateTest() {
+        Film film12 = new Film();
+        film12.setName("Пушка");
+        film12.setDescription("........");
+        film12.setReleaseDate(LocalDate.of(2235, 11, 6));
+        film12.setDuration(90);
+
+        Film film12AppDate = new Film();
+        film12AppDate.setName("Пушка - гонка");
+        film12AppDate.setDescription("Проверка");
+        film12AppDate.setReleaseDate(LocalDate.of(2013, 10, 13));
+        film12AppDate.setDuration(95);
+        film12AppDate.setId(12);
+
+        filmStorage.saveFilm(film12);
+        filmStorage.saveFilm(film12AppDate);
+
+        assertEquals(film12AppDate, filmStorage.getFilms().get(12L));
+    }
+
+    @Test
+    void addLikeTest() {
         filmService.addLike(1, 1);
-        filmService.addLike(2, 1);
+        filmService.addLike(1, 2);
 
         assertEquals(Set.of(1L, 2L), filmStorage.getFilms().get(1L).getLikes());
         assertEquals(2, filmStorage.getFilms().get(1L).getLikes().size());
     }
 
     @Test
-    void deleteLike() {
+    void addLikeFalseFilmTest() {
+        FilmNotFoundException ex = assertThrows(FilmNotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                filmService.addLike(-1, 1);
+            }
+        });
+
+        assertEquals("Фильм с id = -1 не найден.", ex.getMessage());
+    }
+
+    @Test
+    void addLikeFalseUserTest() {
+        UserNotFoundException ex = assertThrows(UserNotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                filmService.addLike(1, 35);
+            }
+        });
+
+        assertEquals("Пользователь с id = 35 не найден.", ex.getMessage());
+    }
+
+    @Test
+    void deleteLikeTest() {
         filmService.addLike(1, 1);
-        filmService.addLike(2, 1);
-        filmService.addLike(3, 1);
-        filmService.addLike(4, 1);
+        filmService.addLike(1, 2);
+        filmService.addLike(1, 3);
+        filmService.addLike(1, 4);
         filmService.addLike(2, 2);
-        filmService.addLike(3, 2);
+        filmService.addLike(2, 3);
 
         filmService.deleteLike(1, 1);
         filmService.deleteLike(2, 2);
@@ -160,29 +220,96 @@ class FilmServiceTest {
     }
 
     @Test
-    void findPopularFilms() {
-        filmService.addLike(1, 10);
-        filmService.addLike(2, 10);
-        filmService.addLike(3, 10);
-        filmService.addLike(4, 10);
+    void findPopularFilmsTest() {
+        filmService.addLike(10, 1);
+        filmService.addLike(10, 2);
+        filmService.addLike(10, 3);
+        filmService.addLike(10, 4);
         filmService.addLike(2, 2);
-        filmService.addLike(3, 2);
-        filmService.addLike(1, 1);
         filmService.addLike(2, 3);
-        filmService.addLike(3, 4);
-        filmService.addLike(4, 5);
-        filmService.addLike(2, 6);
-        filmService.addLike(3, 7);
-        filmService.addLike(4, 7);
-        filmService.addLike(1, 8);
-        filmService.addLike(2, 8);
-        filmService.addLike(3, 8);
-        filmService.addLike(4, 9);
+        filmService.addLike(1, 1);
+        filmService.addLike(3, 2);
+        filmService.addLike(4, 3);
+        filmService.addLike(5, 4);
+        filmService.addLike(6, 2);
+        filmService.addLike(7, 3);
+        filmService.addLike(7, 4);
+        filmService.addLike(8, 1);
+        filmService.addLike(8, 2);
+        filmService.addLike(8, 3);
+        filmService.addLike(9, 4);
 
-        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(11L),
+        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
+                        filmService.getFilmStorage().getFilms().get(8L),
+                        filmService.getFilmStorage().getFilms().get(2L),
+                        filmService.getFilmStorage().getFilms().get(7L)),
+                filmService.findPopularFilms(4));
+
+        assertEquals(List.of(filmService.getFilmStorage().getFilms().get(10L),
+                        filmService.getFilmStorage().getFilms().get(8L),
+                        filmService.getFilmStorage().getFilms().get(2L),
+                        filmService.getFilmStorage().getFilms().get(7L),
                         filmService.getFilmStorage().getFilms().get(1L),
                         filmService.getFilmStorage().getFilms().get(3L),
-                        filmService.getFilmStorage().getFilms().get(4L)),
-                filmService.findPopularFilms(4));
+                        filmService.getFilmStorage().getFilms().get(4L),
+                        filmService.getFilmStorage().getFilms().get(5L),
+                        filmService.getFilmStorage().getFilms().get(6L),
+                        filmService.getFilmStorage().getFilms().get(9L),
+                        filmService.getFilmStorage().getFilms().get(11L)),
+                filmService.findPopularFilms(11));
+    }
+
+    @Test
+    void findAllFilmsTest() {
+        Film film12 = new Film();
+        film12.setName("Пушка");
+        film12.setDescription("........");
+        film12.setReleaseDate(LocalDate.of(2235, 11, 6));
+        film12.setDuration(90);
+
+        Film film13 = new Film();
+        film13.setName("Пушка - гонка");
+        film13.setDescription("Проверка");
+        film13.setReleaseDate(LocalDate.of(2013, 10, 13));
+        film13.setDuration(95);
+        film13.setId(12);
+
+        filmStorage.saveFilm(film12);
+        filmStorage.saveFilm(film13);
+
+        assertEquals(filmStorage.getFilms().values(), filmService.findAllFilms());
+    }
+
+    @Test
+    void findByIdFilmTest() {
+        Film film12 = new Film();
+        film12.setName("Пушка");
+        film12.setDescription("........");
+        film12.setReleaseDate(LocalDate.of(2235, 11, 6));
+        film12.setDuration(90);
+
+        Film film13 = new Film();
+        film13.setName("Пушка - гонка");
+        film13.setDescription("Проверка");
+        film13.setReleaseDate(LocalDate.of(2013, 10, 13));
+        film13.setDuration(95);
+
+        filmStorage.saveFilm(film12);
+        filmStorage.saveFilm(film13);
+
+        assertEquals(Optional.of(filmStorage.getFilms().get(7L)), filmService.findByIdFilm(7L));
+        assertEquals(Optional.of(film13), filmService.findByIdFilm(13L));
+    }
+
+    @Test
+    void findByIdFilmFalseTest() {
+        FilmNotFoundException ex = assertThrows(FilmNotFoundException.class, new Executable() {
+        @Override
+        public void execute() throws IOException {
+            filmService.findByIdFilm(35L);
+        }
+    });
+
+    assertEquals("Фильм с id = 35 не найден.", ex.getMessage());
     }
 }
