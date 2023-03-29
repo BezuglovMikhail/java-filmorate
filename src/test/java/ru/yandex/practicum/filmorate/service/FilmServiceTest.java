@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -297,8 +296,8 @@ class FilmServiceTest {
         filmStorage.saveFilm(film12);
         filmStorage.saveFilm(film13);
 
-        assertEquals(Optional.of(filmStorage.getFilms().get(7L)), filmService.findByIdFilm(7L));
-        assertEquals(Optional.of(film13), filmService.findByIdFilm(13L));
+        assertEquals(filmStorage.getFilms().get(7L), filmService.findByIdFilm(7L));
+        assertEquals(film13, filmService.findByIdFilm(13L));
     }
 
     @Test

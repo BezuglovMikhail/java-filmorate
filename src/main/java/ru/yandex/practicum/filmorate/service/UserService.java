@@ -40,13 +40,11 @@ public class UserService {
         getUserStorage().getUsers().get(idDeleteFriend).getFriends().remove(id);
     }
 
-    public Optional<User> findByIdUser(long userId) {
+    public User findByIdUser(long userId) {
         if (!getUserStorage().getUsers().containsKey(userId)) {
             throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
         }
-        return getUserStorage().getUsers().values().stream()
-                .filter(x -> x.getId() == userId)
-                .findFirst();
+        return getUserStorage().getUsers().get(userId);
     }
 
     public Collection<User> findAll() {

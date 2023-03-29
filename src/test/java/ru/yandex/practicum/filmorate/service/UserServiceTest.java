@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -130,8 +129,8 @@ class UserServiceTest {
 
         userService.addUser(user5);
 
-        assertEquals(Optional.of(userStorage.getUsers().get(3L)), userService.findByIdUser(3));
-        assertEquals(Optional.of(user5), userService.findByIdUser(5));
+        assertEquals(userStorage.getUsers().get(3L), userService.findByIdUser(3));
+        assertEquals(user5, userService.findByIdUser(5));
     }
 
     @Test

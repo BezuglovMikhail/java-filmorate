@@ -48,13 +48,11 @@ public class FilmService {
         return getFilmStorage().getFilms().values();
     }
 
-    public Optional<Film> findByIdFilm(Long filmId) {
+    public Film findByIdFilm(Long filmId) {
         if (!getFilmStorage().getFilms().containsKey(filmId)) {
             throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
         }
-        return getFilmStorage().getFilms().values().stream()
-                .filter(x -> x.getId() == filmId)
-                .findFirst();
+        return getFilmStorage().getFilms().get(filmId);
     }
 
 
