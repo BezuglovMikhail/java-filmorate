@@ -32,7 +32,7 @@ public class UserService {
         getUserStorage().validateUser(getUserStorage().getUsers().get(idNewFriend));
         getUserStorage().getUsers().get(id).getFriends().add(idNewFriend);
         getUserStorage().getUsers().get(idNewFriend).getFriends().add(id);
-        return  getUserStorage().getUsers().get(idNewFriend);
+        return getUserStorage().getUsers().get(idNewFriend);
     }
 
     public void deleteFriend(long id, long idDeleteFriend) {

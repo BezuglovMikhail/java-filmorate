@@ -41,14 +41,14 @@ public class FilmService {
             throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
         }
         getFilmStorage().getFilms().get(filmId).getLikes().add(userId);
-        return  getFilmStorage().getFilms().get(filmId);
+        return getFilmStorage().getFilms().get(filmId);
     }
 
-    public Collection<Film> findAllFilms(){
+    public Collection<Film> findAllFilms() {
         return getFilmStorage().getFilms().values();
     }
 
-    public Optional<Film> findByIdFilm(Long filmId){
+    public Optional<Film> findByIdFilm(Long filmId) {
         if (!getFilmStorage().getFilms().containsKey(filmId)) {
             throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
         }
