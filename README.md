@@ -46,8 +46,8 @@ SELECT u.user_id,
        u.login, 
        u.user_name, 
        u.birthday  
-FROM users u JOIN frends f ON u.user_id = f.user_id
-WHERE f.frend_id = 1
+FROM users u JOIN friends f ON u.user_id = f.user_id
+WHERE f.friend_id = 1
 AND f.status_friendship = 'друзья'; -- Выведет список друзей пользователя с id = 1.
 
 SELECT u.user_id, 
@@ -56,18 +56,18 @@ SELECT u.user_id,
        u.user_name, 
        u.birthday
 FROM (SELECT *
-      FROM frends f JOIN frends f2 USING(frend_id)
+      FROM friends f JOIN friends f2 USING(friend_id)
       WHERE f.user_id = 1 
       AND f2.user_id  = 2 
       AND f.status_friendship = 'друзья' 
       AND f2.status_friendship = 'друзья') AS common 
-      JOIN users u ON common.frend_id = u.user_id; -- Выведет список общих друзей пользователя с id = 1 и id = 2.
+      JOIN users u ON common.friend_id = u.user_id; -- Выведет список общих друзей пользователя с id = 1 и id = 2.
 
 SELECT f.film_name, 
        COUNT(l.film_id) 
 FROM films f JOIN likes l ON f.film_id = l.film_id 
 GROUP BY f.film_name 
-ORDER BY f.film_name; -- Выведет список фильмов и количество лайков (начиная с самого популярного).
+ORDER BY COUNT(l.film_id) DESC; -- Выведет список фильмов и количество лайков (начиная с самого популярного).
 
 SELECT f.film_name 
 FROM films f JOIN likes l ON f.film_id = l.film_id  
