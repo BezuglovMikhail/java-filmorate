@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -10,7 +12,13 @@ public interface UserStorage {
 
     Optional<User> saveUser(User user);
 
-    boolean validateUser(User user);
+    Optional<User> updateUser(User user);
 
-    HashMap<Long, User> getUsers();
+    boolean validateUser(Long userId);
+
+    Collection<User> getUsers();
+
+    Optional<User> findUserById(Long useId);
+
+    User removeUser(User user);
 }
