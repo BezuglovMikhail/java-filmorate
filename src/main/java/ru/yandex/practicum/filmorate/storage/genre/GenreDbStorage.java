@@ -16,13 +16,12 @@ public class GenreDbStorage implements GenreStorage{
     }
     @Override
     public HashSet<Genre> getFilmGenres(Long filmId) {
-        return new HashSet<>(jdbcTemplate.query(
-                "SELECT genres.genre_id, genres.genre_name FROM film_genres\n" +
-                        " JOIN genres ON film_genres.genre_id = genres.genre_id\n" +
-                        " WHERE film_id = ?\n" +
-                        " ORDER BY genres.genre_id", (rs, rowNum) -> new Genre(
-                        rs.getInt("genre_id"),
-                        rs.getString("genre_name")),
+        return new HashSet<>(jdbcTemplate.query("SELECT genres.genre_id, genre_name FROM film_genres" +
+                        " JOIN genres ON film_genres.genre_id = genres.genre_id" +
+                        " WHERE film_id = ?" +
+                        " ORDER BY genres.genre_id ", (rs, rowNum) -> new Genre(
+                        rs.getInt("genres.genre_id"),
+                        rs.getString("genres.genre_name")),
                 filmId
         ));
     }
