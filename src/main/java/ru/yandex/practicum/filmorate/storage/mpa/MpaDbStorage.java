@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MPA;
 
 @Repository
@@ -20,6 +21,6 @@ public class MpaDbStorage implements MpaStorage{
         if (mpaRows.next()) {
             return new MPA(id, mpaRows.getString("mpa_name"));
         }
-        return null;
+       throw new  NotFoundException("Рейтинга с id = " + id + " нет.");
     }
 }

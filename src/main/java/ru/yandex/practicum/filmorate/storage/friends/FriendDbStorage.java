@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -33,7 +32,7 @@ public class FriendDbStorage implements FriendStorage {
         jdbcTemplate.update("INSERT INTO friends (user_id, friend_id, status) VALUES (?, ?, ?)", userId, friendId, false);
         log.info("Пользователь с id= " + friendId + " добавлен в друзья пользователю с id= " + userId);
         } else {
-            throw new UserNotFoundException("Нет пользователя с id= " + userId + " или " + friendId);
+            throw new NotFoundException("Нет пользователя с id= " + userId + " или " + friendId);
         }
     }
 

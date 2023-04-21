@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class UserDbStorage implements UserStorage {
             log.info("Данные пользователя с идентификатором {} обновлены.", user.getId());
             return Optional.of(user);
          } else {
-            throw new UserNotFoundException("Пользователя с id = " + user.getId() + " нет.");
+            throw new NotFoundException("Пользователя с id = " + user.getId() + " нет.");
         }
     }
 
@@ -87,7 +87,7 @@ public class UserDbStorage implements UserStorage {
             log.info("Найден пользователь: {} {}", userRows.getString("user_id"), userRows.getString("user_name"));
             return Optional.of(user);
         } else {
-            throw new UserNotFoundException("Пользователя с id = " + userId + " нет.");
+            throw new NotFoundException("Пользователя с id = " + userId + " нет.");
         }
     }
 
@@ -98,7 +98,7 @@ public class UserDbStorage implements UserStorage {
             log.info("Удален пользователь с: id={}", user.getId());
             return user;
         } else {
-            throw new UserNotFoundException(String.format("Пользователя с id = " + user.getId() + " нет."));
+            throw new NotFoundException(String.format("Пользователя с id = " + user.getId() + " нет."));
         }
     }
 }

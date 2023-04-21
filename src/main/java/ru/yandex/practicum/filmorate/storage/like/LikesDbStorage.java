@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
@@ -41,10 +40,10 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public void addLike(Long userId, Long filmId) {
         if (!userStorage.validateUser(userId)) {
-            throw new UserNotFoundException("Пользователя с id= " + userId + " не найден");
+            throw new NotFoundException("Пользователя с id= " + userId + " не найден");
         }
         if (!filmStorage.validateFilm(filmId)) {
-            throw new FilmNotFoundException("Фильма с id= " + filmId + " не найден");
+            throw new NotFoundException("Фильма с id= " + filmId + " не найден");
         }
         jdbcTemplate.update("INSERT INTO likes (user_id, film_id) VALUES (?, ?)", userId, filmId);
         log.info("Пользователь с id={} поставил лайк фильму с id={}", userId, filmId);
@@ -53,10 +52,10 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public void removeLike(Long filmId, Long userId) {
         if (!userStorage.validateUser(userId)) {
-            throw new UserNotFoundException("Пользователя с id= " + userId + " не найден");
+            throw new NotFoundException("Пользователя с id= " + userId + " не найден");
         }
         if (!filmStorage.validateFilm(filmId)) {
-            throw new FilmNotFoundException("Фильма с id= " + filmId + " не найден");
+            throw new NotFoundException("Фильма с id= " + filmId + " не найден");
         }
         jdbcTemplate.update("DELETE FROM likes WHERE user_id = ? AND film_id = ?", userId, filmId);
         log.info("Пользователь с id={} удалил лайк фильму с id={}", userId, filmId);
