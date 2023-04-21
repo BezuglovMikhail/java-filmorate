@@ -26,13 +26,13 @@ public class MpaService {
     }
 
     public MPA get(int id) {
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT mpa_name FROM mpa WHERE id = ?", id);
-        if (userRows.next()) {
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT mpa_name FROM mpa WHERE id = ?", id);
+        if (mpaRows.next()) {
             MPA mpa = new MPA(
                     id,
-                    userRows.getString("name")
+                    mpaRows.getString("mpa_name")
             );
-            log.info("Mpa found: {}", mpa);
+            log.info("Рейтинг(MPA) найден: {}", mpa);
             return mpa;
         } else throw new NotFoundException(String.format("Рейтинг(MPA) с id=%d не найден", id));
     }

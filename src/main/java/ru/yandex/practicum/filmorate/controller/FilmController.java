@@ -35,7 +35,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Optional<Film> update(@Valid @RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         //log.debug("Обновлён фильм с id = {}", film.getId());
         return filmService.updateFilm(film);
     }

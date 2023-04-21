@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public Optional<User> updateUser(User user) {
-        return getUserStorage().updateUser(user);
+            return getUserStorage().updateUser(user);
     }
 
     public void createFriend(long userId, long idNewFriend) {

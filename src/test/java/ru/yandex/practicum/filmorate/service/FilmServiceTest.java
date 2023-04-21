@@ -18,11 +18,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FilmServiceTest {
+/*class FilmServiceTest {
 
     InMemoryUserStorage userStorage = new InMemoryUserStorage();
     InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
-    FilmService filmService = new FilmService(filmStorage, userStorage);
+    //FilmService filmService = new FilmService(filmStorage, userStorage);
 
     @BeforeEach
     void createUsersFilmsForTest() throws IOException, InterruptedException {

@@ -3,13 +3,17 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikesDbStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikesStorage;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -21,19 +25,28 @@ public class FilmService {
 
     @Autowired
     //public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
-   //     this.filmStorage = inMemoryFilmStorage;
-   //     this.userStorage = inMemoryUserStorage;
+    //     this.filmStorage = inMemoryFilmStorage;
+    //     this.userStorage = inMemoryUserStorage;
     public FilmService(FilmDbStorage filmDbStorage, LikesDbStorage likesDbStorage) {
         this.filmStorage = filmDbStorage;
         this.likesStorage = likesDbStorage;
-   }
+    }
 
     public Optional<Film> addFilm(Film film) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
+        }
         return getFilmStorage().saveFilm(film);
     }
 
-    public Optional<Film> updateFilm(Film film) {
-        return getFilmStorage().updateFilm(film);
+    public Film updateFilm(Film film) {
+         getFilmStorage().updateFilm(film);
+         Film filmGenres = filmStorage.findFilmById(film.getId()).orElseThrow(
+                 () -> new NotFoundException("Фильм с id = " + film.getId() + " не найден"));
+         if (film.getGenres() == null) {
+             filmGenres.setGenres(new HashSet<>());
+         }
+        return filmGenres;
     }
 
     public Film removeFilm(Film film) {
@@ -49,7 +62,7 @@ public class FilmService {
     }
 
     public void addLike(long filmId, long userId) {
-       likesStorage.addLike(userId, filmId);
+        likesStorage.addLike(userId, filmId);
     }
 
     public void deleteLike(long userId, long filmId) {

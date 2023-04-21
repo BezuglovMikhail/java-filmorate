@@ -28,7 +28,7 @@ public class MpaController {
     }
 
     @GetMapping("/{id}")
-    public MPA getGenre(@PathVariable int id) {
+    public MPA getMpaById(@PathVariable int id) {
         return mpaService.get(id);
     }
 }

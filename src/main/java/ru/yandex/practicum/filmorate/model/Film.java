@@ -21,7 +21,8 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Set<Long> likes = new LinkedHashSet<>();
-    private Set<Genre> genres;
+
+    private Set<Genre> genres = new LinkedHashSet<>();
     @Positive
     private int duration;
     //@NotNull
@@ -36,7 +37,7 @@ public class Film {
         this.duration = duration;
     }
 
-    public Film(long id, String name, String description, LocalDate releaseDate, int duration,  Set<Genre> genres, MPA mpa) {
+    public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Genre> genres, MPA mpa) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,7 +47,7 @@ public class Film {
         this.mpa = mpa;
     }
 
-    public Film(long id, String name, String description, LocalDate releaseDate, int duration,  Set<Genre> genres, MPA mpa, long rate) {
+    public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Genre> genres, MPA mpa, long rate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -63,30 +64,6 @@ public class Film {
         values.put("description", description);
         values.put("release_date", releaseDate);
         values.put("duration", duration);
-        //values.put("mpa_id", mpa);
         return values;
     }
-    //private Set<Long> likes = new HashSet<>();
 }
-
-/*import lombok.Data;
-
-@Data
-public class Film {
-    private String filmId;
-
-    //@NotNull
-    //@NotBlank
-    private String filmName;
-
-    //@Size(max = 200)
-    private String filmDescription;
-    private String filmReleaseDate;
-
-    //@Positive
-    private String filmDuration;
-
-    private String filmRating;
-
-    //private Set<Long> likes = new HashSet<>();
-}*/

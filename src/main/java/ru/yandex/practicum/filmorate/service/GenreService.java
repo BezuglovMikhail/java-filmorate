@@ -26,17 +26,14 @@ public class GenreService {
     }
 
     public Genre get(int id) {
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT genre_name FROM genres WHERE genre_id", id);
-        if (userRows.next()) {
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT genre_name FROM genres WHERE genre_id = ?", id);
+        if (genreRows.next()) {
             Genre genre = new Genre(
                     id,
-                    userRows.getString("genre_name")
+                    genreRows.getString("genre_name")
             );
             log.info("Найденный жанр = {} ", genre);
             return genre;
-        } else throw new NotFoundException(String.format("Жанр с id=%d не найден", id));
+        } else throw new NotFoundException(String.format("Жанр с id= " + id + " не найден"));
     }
-
-
 }
-

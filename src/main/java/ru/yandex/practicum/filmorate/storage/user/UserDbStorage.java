@@ -51,7 +51,7 @@ public class UserDbStorage implements UserStorage {
                     user.getId());
             log.info("Данные пользователя с идентификатором {} обновлены.", user.getId());
             return Optional.of(user);
-        } else {
+         } else {
             throw new UserNotFoundException("Пользователя с id = " + user.getId() + " нет.");
         }
     }

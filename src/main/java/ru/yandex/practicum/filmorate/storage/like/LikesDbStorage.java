@@ -71,7 +71,7 @@ public class LikesDbStorage implements LikesStorage {
                 rs.getLong("film_id"),
                 rs.getString("name"),
                 rs.getString("description"),
-                rs.getDate("releaseDate").toLocalDate(),
+                rs.getDate("release_date").toLocalDate(),
                 rs.getInt("duration"),
                 genreStorage.getFilmGenres(rs.getLong("film_id")),
                 mpaStorage.getMpa(rs.getInt("mpa_id")),
