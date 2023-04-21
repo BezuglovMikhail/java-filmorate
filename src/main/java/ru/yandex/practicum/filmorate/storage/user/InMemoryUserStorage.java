@@ -67,38 +67,4 @@ public class InMemoryUserStorage implements UserStorage {
         users.remove(user.getId());
         return user;
     }
-
-    /*public User createFriend(long id, long idNewFriend) {
-    getUserStorage().validateUser(getUserStorage().getUsers().get(id));
-    getUserStorage().validateUser(getUserStorage().getUsers().get(idNewFriend));
-    getUserStorage().getUsers().get(id).getFriends().add(idNewFriend);
-    getUserStorage().getUsers().get(idNewFriend).getFriends().add(id);
-        return getUserStorage().getUsers().get(idNewFriend);
-        }
-
-        public void deleteFriend(long id, long idDeleteFriend) {
-        getUserStorage().getUsers().get(id).getFriends().remove(idDeleteFriend);
-        getUserStorage().getUsers().get(idDeleteFriend).getFriends().remove(id);
-    }
-    public Collection<User> findAll() {
-        return getUserStorage().getUsers().values();
-    }
-    public List<User> findFriendsByIdUser(@PathVariable long id) {
-        return getUserStorage().getUsers().values().stream()
-                .filter(x -> getUserStorage().getUsers().get(id).getFriends().contains(x.getId()))
-                .sorted(Comparator.comparing(User::getId))
-                .collect(Collectors.toList());
-    }
-
-    public List<User> findAllGenerateFriends(long id, long otherId) {
-        List<Long> generalFriends = getUserStorage().getUsers().get(id).getFriends().stream()
-                .filter(getUserStorage().getUsers().get(otherId).getFriends()::contains)
-                .collect(Collectors.toList());
-
-        return getUserStorage().getUsers().values().stream()
-                .filter(x -> generalFriends.contains(x.getId()))
-                .sorted(Comparator.comparing(User::getId))
-                .collect(Collectors.toList());
-    }
-     */
 }

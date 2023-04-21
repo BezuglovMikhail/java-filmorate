@@ -19,7 +19,6 @@ public class UserController {
 
     @GetMapping
     public Collection<User> findAll() {
-        //log.debug("Текущее количество пользователей: {}", userService.findAll().size());
         return userService.findAll();
     }
 
@@ -30,13 +29,11 @@ public class UserController {
 
     @PostMapping
     public Optional<User> create(@Valid @RequestBody User user) {
-        //log.debug("Добавлен пользователь с id = {}", user.getId());
         return userService.addUser(user);
     }
 
     @PutMapping
     public Optional<User> update(@Valid @RequestBody User user) {
-        //log.debug("Обновлен пользователь с id = {}", user.getId());
         return userService.updateUser(user);
     }
 

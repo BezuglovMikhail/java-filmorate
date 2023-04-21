@@ -11,7 +11,7 @@ public interface FilmStorage {
 
     Optional<Film> saveFilm(Film film);
 
-    Optional<Film> updateFilm(Film film);
+   Optional<Film> updateFilm(Film film);
 
     Film removeFilm(Film film);
 
@@ -19,5 +19,5 @@ public interface FilmStorage {
 
     Collection<Film> getFilms();
 
-    Optional<Film> findFilmById(Long filmId);
+    Film findFilmById(Long filmId);
 }

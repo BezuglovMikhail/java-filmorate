@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -42,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             }
         }
         return films.values().stream()
-                .filter(x -> Objects.equals(x.getName(), film.getName()))
+               .filter(x -> Objects.equals(x.getName(), film.getName()))
                 .findFirst();
     }
 
@@ -58,7 +58,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
         }
         if (!films.containsKey(filmId) && filmId != 0) {
-            throw new FilmNotFoundException("Фильма с id = " + filmId + " нет.");
+            throw new NotFoundException("Фильма с id = " + filmId + " нет.");
         }
         return true;
     }
@@ -69,26 +69,23 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> findFilmById(Long filmId) {
+    public Film findFilmById(Long filmId) {
         if (!films.containsKey(filmId)) {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
+            throw new NotFoundException(String.format("Фильм с id = %s не найден.", filmId));
         }
-        return Optional.ofNullable(films.get(filmId));
+        return films.get(filmId);
     }
 
     public Film addLike(long filmId, long userId) {
         if (!films.containsKey(filmId)) {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
+            throw new NotFoundException(String.format("Фильм с id = %s не найден.", filmId));
         }
-       // if (!users.containsKey(userId)) {
-       //    throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
-        //}
         films.get(filmId).getLikes().add(userId);
         return films.get(filmId);
     }
 
     public void deleteLike(long userId, long filmId) {
-        // getFilmStorage().getFilms().get(filmId).getLikes().remove(userId);
+         films.get(filmId).getLikes().remove(userId);
     }
 
     public List<Film> findPopularFilms(Integer count) {

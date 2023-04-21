@@ -52,7 +52,6 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Optional<Film> updateFilm(Film film) {
         if (validateFilm(film.getId())) {
-
             jdbcTemplate.update(
                     "UPDATE films SET name = ?, description = ?, release_date = ?," +
                             " duration = ?, mpa_id = ? WHERE film_id = ?",
@@ -79,7 +78,7 @@ public class FilmDbStorage implements FilmStorage {
             return film;
 
         } else {
-            throw new NotFoundException(String.format("Фильма с id = " + film.getId() + " нет."));
+            throw new NotFoundException("Фильма с id = " + film.getId() + " нет.");
         }
     }
 
@@ -103,7 +102,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> findFilmById(Long filmId) {
+    public Film findFilmById(Long filmId) {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM films WHERE film_id = ?", filmId);
         if (filmRows.next()) {
             Film film = new Film(
@@ -117,9 +116,10 @@ public class FilmDbStorage implements FilmStorage {
             film.setMpa(mpaStorage.getMpa(mpaId));
             Set<Genre> genres = genreStorage.getFilmGenres(filmId);
             if (genres.size() != 0) {
-                film.setGenres(genres);}
+                film.setGenres(genres);
+            }
             log.info("Найден фильм: {} {}", filmRows.getString("film_id"), filmRows.getString("name"));
-            return Optional.of(film);
+            return film;
         } else {
             throw new NotFoundException("Фильма с id = " + filmId + " нет.");
         }

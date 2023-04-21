@@ -24,7 +24,7 @@ public class FilmController {
     }
 
     @GetMapping("/{filmId}")
-    public Optional<Film> findById(@PathVariable Long filmId) {
+    public Film findById(@PathVariable Long filmId) {
         return filmService.findByIdFilm(filmId);
     }
 
@@ -45,7 +45,6 @@ public class FilmController {
             @PathVariable(value = "id") Long id,
             @PathVariable(value = "userId") Long userId
     ) {
-        //log.debug("Пользователь с id = {} поставил лайк фильму с id = {}", id, userId);
         filmService.addLike(id, userId);
     }
 
@@ -55,7 +54,6 @@ public class FilmController {
             @PathVariable(value = "userId") Long userId
     ) {
         filmService.deleteLike(id, userId);
-        //log.debug("Пользователь с id = {} удалил лайк фильму с id = {}", userId, id);
     }
 
     @GetMapping("/popular")

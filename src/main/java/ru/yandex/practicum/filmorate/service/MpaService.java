@@ -34,6 +34,6 @@ public class MpaService {
             );
             log.info("Рейтинг(MPA) найден: {}", mpa);
             return mpa;
-        } else throw new NotFoundException(String.format("Рейтинг(MPA) с id=%d не найден", id));
+        } else throw new NotFoundException("Рейтинг(MPA) с id= " + id + " не найден");
     }
 }

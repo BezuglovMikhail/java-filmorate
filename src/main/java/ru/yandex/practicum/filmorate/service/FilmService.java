@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
@@ -41,8 +40,7 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
          getFilmStorage().updateFilm(film);
-         Film filmGenres = filmStorage.findFilmById(film.getId()).orElseThrow(
-                 () -> new NotFoundException("Фильм с id = " + film.getId() + " не найден"));
+         Film filmGenres = filmStorage.findFilmById(film.getId());
          if (film.getGenres() == null) {
              filmGenres.setGenres(new HashSet<>());
          }
@@ -53,7 +51,7 @@ public class FilmService {
         return getFilmStorage().removeFilm(film);
     }
 
-    public Optional<Film> findByIdFilm(Long filmId) {
+    public Film findByIdFilm(Long filmId) {
         return getFilmStorage().findFilmById(filmId);
     }
 

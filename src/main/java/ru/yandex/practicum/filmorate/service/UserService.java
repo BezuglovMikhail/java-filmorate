@@ -2,11 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.friends.FriendStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
@@ -18,13 +18,9 @@ public class UserService {
     private UserStorage userStorage;
     private FriendStorage friendStorage;
 
-    // @Autowired
-    //public UserService(InMemoryUserStorage inMemoryUserStorage) {
-    ///this.userStorage = inMemoryUserStorage;
-    //}
-    @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendStorage friendStorage) {
-        this.userStorage = userStorage;
+       @Autowired
+    public UserService(UserDbStorage userDbStorage, FriendStorage friendStorage) {
+        this.userStorage = userDbStorage;
         this.friendStorage = friendStorage;
     }
 
