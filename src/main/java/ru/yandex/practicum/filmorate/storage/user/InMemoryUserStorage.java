@@ -47,7 +47,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public boolean validateUser(Long userId) {
         if (!users.containsKey(userId) && userId != 0) {
-            throw new NotFoundException("Пользователя с id = " + userId + " нет.");
+            throw new NotFoundException("Пользователя с id = " + userId + " нет");
         }
         return true;
     }
