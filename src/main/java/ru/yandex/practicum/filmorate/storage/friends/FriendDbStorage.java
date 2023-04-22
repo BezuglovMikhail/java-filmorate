@@ -2,11 +2,11 @@ package ru.yandex.practicum.filmorate.storage.friends;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Collection;
@@ -19,9 +19,9 @@ public class FriendDbStorage implements FriendStorage {
 
     private final Logger log = LoggerFactory.getLogger(FriendDbStorage.class);
 
-    public FriendDbStorage(JdbcTemplate jdbcTemplate, UserDbStorage userDbStorage) {
+    public FriendDbStorage(JdbcTemplate jdbcTemplate,  @Qualifier("userDbStorage") UserStorage userStorage) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userStorage = userDbStorage;
+        this.userStorage = userStorage;
     }
 
     @Override

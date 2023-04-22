@@ -27,9 +27,6 @@ public class FilmService {
     private LikesStorage likesStorage;
 
     @Autowired
-    //public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
-    //     this.filmStorage = inMemoryFilmStorage;
-    //     this.userStorage = inMemoryUserStorage;
     public FilmService(FilmDbStorage filmDbStorage, LikesDbStorage likesDbStorage) {
         this.filmStorage = filmDbStorage;
         this.likesStorage = likesDbStorage;
