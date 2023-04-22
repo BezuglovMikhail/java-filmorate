@@ -46,3 +46,4 @@ build/
 db/*
 /.mvn/
 /.github/workflows/
+/.github/
