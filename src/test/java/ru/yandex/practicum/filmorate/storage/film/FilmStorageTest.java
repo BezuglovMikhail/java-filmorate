@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,11 +29,11 @@ class FilmStorageTest {
 
         filmStorage.saveFilm(film);
 
-        assertEquals(1, filmStorage.getFilms().get(1L).getId());
-        assertEquals("Deadpool 3", filmStorage.getFilms().get(1L).getName());
-        assertEquals("Скоро выйдет)", filmStorage.getFilms().get(1L).getDescription());
-        assertEquals(190, filmStorage.getFilms().get(1L).getDuration());
-        assertEquals(LocalDate.of(2024, 11, 6), filmStorage.getFilms().get(1L).getReleaseDate());
+        assertEquals(1, filmStorage.findFilmById(1L).getId());
+        assertEquals("Deadpool 3", filmStorage.findFilmById(1L).getName());
+        assertEquals("Скоро выйдет)", filmStorage.findFilmById(1L).getDescription());
+        assertEquals(190, filmStorage.findFilmById(1L).getDuration());
+        assertEquals(LocalDate.of(2024, 11, 6), filmStorage.findFilmById(1L).getReleaseDate());
     }
 
     @Test
@@ -51,10 +53,10 @@ class FilmStorageTest {
         filmAppDate.setReleaseDate(LocalDate.of(2025, 11, 6));
         filmAppDate.setDuration(180);
 
-        FilmNotFoundException ex = assertThrows(FilmNotFoundException.class, new Executable() {
+        NotFoundException ex = assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws IOException {
-                filmStorage.saveFilm(filmAppDate);
+                filmStorage.updateFilm(filmAppDate);
             }
         });
 
@@ -78,13 +80,13 @@ class FilmStorageTest {
         filmAppDate.setReleaseDate(LocalDate.of(2025, 11, 6));
         filmAppDate.setDuration(180);
 
-        filmStorage.saveFilm(filmAppDate);
+        filmStorage.updateFilm(filmAppDate);
 
-        assertEquals(1, filmStorage.getFilms().get(1L).getId());
-        assertEquals("Deadpool 3,5", filmStorage.getFilms().get(1L).getName());
-        assertEquals("Скоро выйдет...)", filmStorage.getFilms().get(1L).getDescription());
-        assertEquals(180, filmStorage.getFilms().get(1L).getDuration());
-        assertEquals(LocalDate.of(2025, 11, 6), filmStorage.getFilms().get(1L).getReleaseDate());
+        assertEquals(1, filmStorage.findFilmById(1L).getId());
+        assertEquals("Deadpool 3,5", filmStorage.findFilmById(1L).getName());
+        assertEquals("Скоро выйдет...)", filmStorage.findFilmById(1L).getDescription());
+        assertEquals(180, filmStorage.findFilmById(1L).getDuration());
+        assertEquals(LocalDate.of(2025, 11, 6), filmStorage.findFilmById(1L).getReleaseDate());
     }
 
     @Test
@@ -132,7 +134,7 @@ class FilmStorageTest {
         filmsTest.put(1L, film);
         filmsTest.put(2L, film2);
 
-        assertEquals(filmsTest, filmStorage.getFilms());
+        assertEquals(filmsTest.values().stream().collect(Collectors.toList()), filmStorage.getFilms().stream().collect(Collectors.toList()));
         assertEquals(2, filmStorage.getFilms().size());
     }
 }

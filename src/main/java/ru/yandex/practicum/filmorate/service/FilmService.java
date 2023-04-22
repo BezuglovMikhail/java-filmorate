@@ -7,8 +7,11 @@ import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikesDbStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikesStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,6 +22,7 @@ import java.util.Optional;
 @Data
 public class FilmService {
     private FilmStorage filmStorage;
+    private UserStorage userStorage;
 
     private LikesStorage likesStorage;
 
@@ -29,6 +33,11 @@ public class FilmService {
     public FilmService(FilmDbStorage filmDbStorage, LikesDbStorage likesDbStorage) {
         this.filmStorage = filmDbStorage;
         this.likesStorage = likesDbStorage;
+    }
+
+    public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
+        this.filmStorage = inMemoryFilmStorage;
+        this.userStorage = inMemoryUserStorage;
     }
 
     public Optional<Film> addFilm(Film film) {

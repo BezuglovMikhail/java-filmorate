@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.Data;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
@@ -10,6 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Data
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Long, Film> films = new HashMap<>();
     private long idFilm = 0;
@@ -21,14 +23,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Optional<Film> saveFilm(Film film) {
-        if (validateFilm(film.getId())) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
+        }
             if (films.containsKey(film.getId())) {
                films.put(film.getId(), film);
             } else {
                 film.setId(generateId());
                 films.put(film.getId(), film);
             }
-        }
+
         return films.values().stream()
                 .filter(x -> Objects.equals(x.getName(), film.getName()))
                 .findFirst();
@@ -36,11 +40,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Optional<Film> updateFilm(Film film) {
-        if (validateFilm(film.getId())) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
+        }
+        if (!films.containsKey(film.getId()) && film.getId() != 0) {
+            throw new NotFoundException("Фильма с id = " + film.getId() + " нет.");
+        }
             if (films.containsKey(film.getId())) {
                 films.put(film.getId(), film);
             }
-        }
+
         return films.values().stream()
                .filter(x -> Objects.equals(x.getName(), film.getName()))
                 .findFirst();

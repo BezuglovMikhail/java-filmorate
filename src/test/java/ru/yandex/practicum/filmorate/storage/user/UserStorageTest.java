@@ -1,18 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.Data;
+import org.h2.command.dml.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@Data
 class UserStorageTest {
-    InMemoryUserStorage userStorage = new InMemoryUserStorage();
+    public InMemoryUserStorage userStorage = new InMemoryUserStorage();
 
     @Test
     void generateIdTest() {
@@ -23,12 +26,12 @@ class UserStorageTest {
         user.setBirthday(LocalDate.of(2000, 11, 6));
 
         userStorage.saveUser(user);
-        assertEquals(1, userStorage.getUsers().get(1L).getId());
-        assertEquals("Nik", userStorage.getUsers().get(1L).getName());
-        assertEquals("Log", userStorage.getUsers().get(1L).getLogin());
-        assertEquals("mail@mail.ru", userStorage.getUsers().get(1L).getEmail());
+        assertEquals(1, userStorage.findUserById(1L).get().getId());
+        assertEquals("Nik", userStorage.findUserById(1L).get().getName());
+        assertEquals("Log", userStorage.findUserById(1L).get().getLogin());
+        assertEquals("mail@mail.ru", userStorage.findUserById(1L).get().getEmail());
         assertEquals(LocalDate.of(2000, 11, 6),
-                userStorage.getUsers().get(1L).getBirthday());
+                userStorage.findUserById(1L).get().getBirthday());
     }
 
     @Test
@@ -40,12 +43,12 @@ class UserStorageTest {
         user.setBirthday(LocalDate.of(2000, 11, 6));
 
         userStorage.saveUser(user);
-        assertEquals(1, userStorage.getUsers().get(1L).getId());
-        assertEquals("Log", userStorage.getUsers().get(1L).getName());
-        assertEquals("Log", userStorage.getUsers().get(1L).getLogin());
-        assertEquals("mail@mail.ru", userStorage.getUsers().get(1L).getEmail());
+        assertEquals(1, userStorage.findUserById(1L).get().getId());
+        assertEquals("Log", userStorage.findUserById(1L).get().getName());
+        assertEquals("Log", userStorage.findUserById(1L).get().getLogin());
+        assertEquals("mail@mail.ru", userStorage.findUserById(1L).get().getEmail());
         assertEquals(LocalDate.of(2000, 11, 6),
-                userStorage.getUsers().get(1L).getBirthday());
+                userStorage.findUserById(1L).get().getBirthday());
     }
 
     @Test
@@ -65,14 +68,14 @@ class UserStorageTest {
         user2.setLogin("Login");
         user2.setBirthday(LocalDate.of(2000, 11, 16));
 
-        userStorage.saveUser(user2);
+        userStorage.updateUser(user2);
 
-        assertEquals(1, userStorage.getUsers().get(1L).getId());
-        assertEquals("Nik345", userStorage.getUsers().get(1L).getName());
-        assertEquals("Login", userStorage.getUsers().get(1L).getLogin());
-        assertEquals("maillllll@mail.ru", userStorage.getUsers().get(1L).getEmail());
+        assertEquals(1, userStorage.findUserById(1L).get().getId());
+        assertEquals("Nik345", userStorage.findUserById(1L).get().getName());
+        assertEquals("Login", userStorage.findUserById(1L).get().getLogin());
+        assertEquals("maillllll@mail.ru", userStorage.findUserById(1L).get().getEmail());
         assertEquals(LocalDate.of(2000, 11, 16),
-                userStorage.getUsers().get(1L).getBirthday());
+                userStorage.findUserById(1L).get().getBirthday());
     }
 
     @Test
@@ -92,10 +95,10 @@ class UserStorageTest {
         user2.setLogin("Login");
         user2.setBirthday(LocalDate.of(2000, 11, 16));
 
-        UserNotFoundException ex = assertThrows(UserNotFoundException.class, new Executable() {
+        NotFoundException ex = assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws IOException {
-                userStorage.saveUser(user2);
+                userStorage.updateUser(user2);
             }
         });
 
@@ -125,11 +128,12 @@ class UserStorageTest {
 
         userStorage.saveUser(user2);
 
-        HashMap<Long, User> usersTest = new HashMap<>();
+        HashMap<Long, User> usersTest = new HashMap();
         usersTest.put(1L, user);
         usersTest.put(2L, user2);
 
-        assertEquals(usersTest, userStorage.getUsers());
+        assertEquals(usersTest.values().stream().collect(Collectors.toSet()),
+                userStorage.getUsers().stream().collect(Collectors.toSet()));
         assertEquals(2, userStorage.getUsers().size());
     }
 }

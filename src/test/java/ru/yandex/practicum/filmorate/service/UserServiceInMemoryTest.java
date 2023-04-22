@@ -3,18 +3,19 @@ package ru.yandex.practicum.filmorate.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserServiceTest {
+class UserServiceInMemoryTest {
     InMemoryUserStorage userStorage = new InMemoryUserStorage();
     UserService userService = new UserService(userStorage);
 
@@ -60,7 +61,7 @@ class UserServiceTest {
 
         userService.addUser(user5);
 
-        assertEquals(user5, userStorage.getUsers().get(5L));
+        assertEquals(Optional.of(user5), userStorage.findUserById (5L));
     }
 
     @Test
@@ -79,44 +80,62 @@ class UserServiceTest {
         user5AppDate.setId(5L);
 
         userService.addUser(user5);
-        userService.addUser(user5AppDate);
+        userService.updateUser(user5AppDate);
 
-        assertEquals(user5AppDate, userStorage.getUsers().get(5L));
+        assertEquals(Optional.of(user5AppDate), userService.findByIdUser(5L));
     }
 
 
     @Test
     void createFriendTest() {
-        userService.createFriend(1, 2);
-        userService.createFriend(1, 3);
+        userStorage.addFriend(1, 2);
+        userStorage.addFriend(1, 3);
 
-        assertEquals(Set.of(2L, 3L), userStorage.getUsers().get(1L).getFriends());
-        assertEquals(Set.of(1L), userStorage.getUsers().get(2L).getFriends());
+        assertEquals(userStorage.getUsers().stream().filter(
+                x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
+                userStorage.findFriendsByIdUser(3L));
+        assertEquals(userStorage.getUsers().stream().filter(
+                x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
+                userStorage.findFriendsByIdUser(2L));
     }
 
     @Test
     void deleteFriendTest() {
-        userService.createFriend(1, 2);
-        userService.createFriend(1, 3);
-        userService.deleteFriend(1, 2);
-        userService.deleteFriend(2, 1);
+        userStorage.addFriend(1, 2);
+        userStorage.addFriend(1, 3);
+        userStorage.addFriend(1, 2);
+        userStorage.addFriend(2, 1);
 
-        assertEquals(Set.of(3L), userStorage.getUsers().get(1L).getFriends());
-        assertEquals(Set.of(), userStorage.getUsers().get(2L).getFriends());
+        HashMap<Long, User> friendsTest = new HashMap<>();
+        friendsTest.put(1L, userStorage.findUserById(3L).get());
+        friendsTest.put(2L, userStorage.findUserById(2L).get());
+
+        HashMap<Long, User> friendsTest2 = new HashMap<>();
+        friendsTest2.put(1L, userStorage.findUserById(1L).get());
+
+
+        assertEquals(friendsTest.values().stream().collect(Collectors.toSet()),
+                userStorage.findFriendsByIdUser(1L));
+        assertEquals(friendsTest2.values().stream().collect(Collectors.toSet()),
+                userStorage.findFriendsByIdUser(2L));
     }
 
     @Test
     void findAllGenerateFriends() {
-        userService.createFriend(1, 2);
-        userService.createFriend(1, 3);
-        userService.createFriend(1, 4);
-        userService.createFriend(4, 3);
-        userService.createFriend(4, 2);
+        userStorage.addFriend(1, 2);
+        userStorage.addFriend(1, 3);
+        userStorage.addFriend(1, 4);
+        userStorage.addFriend(4, 3);
+        userStorage.addFriend(4, 2);
 
-        assertEquals(List.of(userStorage.getUsers().get(2L), userStorage.getUsers().get(3L)),
-                userService.findAllGenerateFriends(1, 4));
-        assertEquals(List.of(userStorage.getUsers().get(2L), userStorage.getUsers().get(3L)),
-                userService.findAllGenerateFriends(4, 1));
+        HashMap<Long, User> friendsTest = new HashMap<>();
+        friendsTest.put(1L, userStorage.findUserById(2L).get());
+        friendsTest.put(2L, userStorage.findUserById(3L).get());
+
+        assertEquals(friendsTest.values().stream().collect(Collectors.toSet()),
+                userStorage.findAllGenerateFriends(1, 4));
+        assertEquals(friendsTest.values().stream().collect(Collectors.toSet()),
+                userStorage.findAllGenerateFriends(4, 1));
     }
 
     @Test
@@ -129,13 +148,12 @@ class UserServiceTest {
 
         userService.addUser(user5);
 
-        assertEquals(userStorage.getUsers().get(3L), userService.findByIdUser(3));
-        assertEquals(user5, userService.findByIdUser(5));
+        assertEquals(user5, userService.findByIdUser(5).get());
     }
 
     @Test
     void findByIdUserFalseTest() {
-        UserNotFoundException ex = assertThrows(UserNotFoundException.class, new Executable() {
+        NotFoundException ex = assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws IOException {
                 userService.findByIdUser(35);
@@ -155,6 +173,6 @@ class UserServiceTest {
 
         userService.addUser(user5);
 
-        assertEquals(userStorage.getUsers().values(), userService.findAll());
+        assertEquals(userStorage.getUsers(), userService.findAll());
     }
 }

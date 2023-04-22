@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.friends.FriendStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -18,10 +20,14 @@ public class UserService {
     private UserStorage userStorage;
     private FriendStorage friendStorage;
 
-       @Autowired
+    @Autowired
     public UserService(UserDbStorage userDbStorage, FriendStorage friendStorage) {
         this.userStorage = userDbStorage;
         this.friendStorage = friendStorage;
+    }
+
+    public UserService(InMemoryUserStorage inMemoryUserStorage) {
+        this.userStorage = inMemoryUserStorage;
     }
 
     public Optional<User> addUser(User user) {
