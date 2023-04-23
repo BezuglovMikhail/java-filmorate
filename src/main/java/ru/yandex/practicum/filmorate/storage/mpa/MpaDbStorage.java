@@ -8,19 +8,20 @@ import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MPA;
 
 @Repository
-public class MpaDbStorage implements MpaStorage{
+public class MpaDbStorage implements MpaStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public MpaDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public MPA getMpa(int id) {
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT mpa_name FROM mpa WHERE id = ?", id);
         if (mpaRows.next()) {
             return new MPA(id, mpaRows.getString("mpa_name"));
         }
-       throw new  NotFoundException("Рейтинга с id = " + id + " нет.");
+        throw new NotFoundException("Рейтинга с id = " + id + " нет.");
     }
 }

@@ -8,12 +8,13 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.util.HashSet;
 
 @Repository
-public class GenreDbStorage implements GenreStorage{
+public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public HashSet<Genre> getFilmGenres(Long filmId) {
         return new HashSet<>(jdbcTemplate.query("SELECT genres.genre_id, genre_name FROM film_genres" +

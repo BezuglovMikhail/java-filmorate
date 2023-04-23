@@ -8,6 +8,7 @@ import java.util.HashSet;
 public interface GenreStorage {
 
     HashSet<Genre> getFilmGenres(Long Id);
+
     void addGenres(Film film);
 
     void removeGenres(Film film);
