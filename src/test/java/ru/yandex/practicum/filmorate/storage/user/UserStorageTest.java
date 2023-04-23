@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Data;
-import org.h2.command.dml.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
@@ -13,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @Data
 class UserStorageTest {
     public InMemoryUserStorage userStorage = new InMemoryUserStorage();

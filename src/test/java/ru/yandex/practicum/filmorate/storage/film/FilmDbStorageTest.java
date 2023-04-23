@@ -153,8 +153,6 @@ class FilmDbStorageTest {
         });
 
         assertEquals("Фильма с id = 1000 нет.", ex.getMessage());
-
-
     }
 
     @Test

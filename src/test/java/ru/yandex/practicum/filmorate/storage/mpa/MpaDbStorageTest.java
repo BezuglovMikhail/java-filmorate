@@ -25,8 +25,7 @@ class MpaDbStorageTest {
 
     @Test
     void getMpaTest() {
-
-       Optional<MPA> mpaOptional = Optional.of(mpaStorage.getMpa(1));
+        Optional<MPA> mpaOptional = Optional.of(mpaStorage.getMpa(1));
 
         assertThat(mpaOptional)
                 .isPresent()

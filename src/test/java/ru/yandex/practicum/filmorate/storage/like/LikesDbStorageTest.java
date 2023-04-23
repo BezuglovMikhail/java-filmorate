@@ -31,8 +31,6 @@ class LikesDbStorageTest {
 
     private final LikesDbStorage likesStorage;
 
-
-
     @Test
     @Sql({"/schema.sql", "/data.sql"})
     void addLike() {

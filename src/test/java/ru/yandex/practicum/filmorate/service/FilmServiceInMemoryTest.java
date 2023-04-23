@@ -164,7 +164,7 @@ class FilmServiceInMemoryTest {
         filmStorage.saveFilm(film12);
         filmStorage.saveFilm(film12AppDate);
 
-        assertEquals(film12AppDate, filmStorage.findFilmById (12L));
+        assertEquals(film12AppDate, filmStorage.findFilmById(12L));
     }
 
     @Test
@@ -172,8 +172,8 @@ class FilmServiceInMemoryTest {
         filmStorage.addLike(1, 1);
         filmStorage.addLike(1, 2);
 
-        assertEquals(Set.of(1L, 2L), filmStorage.findFilmById (1L).getLikes());
-        assertEquals(2, filmStorage.findFilmById (1L).getLikes().size());
+        assertEquals(Set.of(1L, 2L), filmStorage.findFilmById(1L).getLikes());
+        assertEquals(2, filmStorage.findFilmById(1L).getLikes().size());
     }
 
     @Test
@@ -201,8 +201,8 @@ class FilmServiceInMemoryTest {
         filmStorage.deleteLike(2, 2);
         filmStorage.deleteLike(3, 2);
 
-        assertEquals(Set.of(2L, 3L, 4L), filmStorage.findFilmById (1L).getLikes());
-        assertEquals(Set.of(), filmStorage.findFilmById (2L).getLikes());
+        assertEquals(Set.of(2L, 3L, 4L), filmStorage.findFilmById(1L).getLikes());
+        assertEquals(Set.of(), filmStorage.findFilmById(2L).getLikes());
     }
 
     @Test
@@ -280,12 +280,12 @@ class FilmServiceInMemoryTest {
     @Test
     void findByIdFilmFalseTest() {
         NotFoundException ex = assertThrows(NotFoundException.class, new Executable() {
-        @Override
-        public void execute() throws IOException {
-            filmService.findByIdFilm(35L);
-        }
-    });
+            @Override
+            public void execute() throws IOException {
+                filmService.findByIdFilm(35L);
+            }
+        });
 
-    assertEquals("Фильм с id = 35 не найден.", ex.getMessage());
+        assertEquals("Фильм с id = 35 не найден.", ex.getMessage());
     }
 }

@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserDbStorageTest {
 
     private final UserDbStorage userStorage;
+
     @Sql({"/schema.sql", "/data.sql"})
     @Test
     void saveAndFindUserByIdUserTest() {

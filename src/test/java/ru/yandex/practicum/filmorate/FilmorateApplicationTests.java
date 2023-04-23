@@ -25,7 +25,6 @@ class FilmorateApplicationTests {
 
     @Test
     public void testFindUserById() {
-
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
         user1.setName(null);
@@ -33,7 +32,6 @@ class FilmorateApplicationTests {
         user1.setBirthday(LocalDate.of(2000, 11, 6));
 
         userStorage.saveUser(user1);
-
 
         Optional<User> userOptional = userStorage.findUserById(1L);
 
@@ -46,7 +44,6 @@ class FilmorateApplicationTests {
 
     @Test
     public void testUpdateUser() {
-
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
         user1.setName(null);
@@ -79,7 +76,6 @@ class FilmorateApplicationTests {
 
     @Test
     public void testAddFilm() {
-
         Film film1 = new Film();
         film1.setName("Deadpool 3");
         film1.setDescription("Скоро выйдет)");

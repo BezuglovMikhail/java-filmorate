@@ -61,7 +61,7 @@ class UserServiceInMemoryTest {
 
         userService.addUser(user5);
 
-        assertEquals(Optional.of(user5), userStorage.findUserById (5L));
+        assertEquals(Optional.of(user5), userStorage.findUserById(5L));
     }
 
     @Test
@@ -92,10 +92,10 @@ class UserServiceInMemoryTest {
         userStorage.addFriend(1, 3);
 
         assertEquals(userStorage.getUsers().stream().filter(
-                x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
+                        x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
                 userStorage.findFriendsByIdUser(3L));
         assertEquals(userStorage.getUsers().stream().filter(
-                x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
+                        x -> Objects.equals(x.getId(), 1L)).collect(Collectors.toSet()),
                 userStorage.findFriendsByIdUser(2L));
     }
 
