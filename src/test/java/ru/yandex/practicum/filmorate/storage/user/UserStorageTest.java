@@ -102,7 +102,7 @@ class UserStorageTest {
             }
         });
 
-        assertEquals("Пользователя с id = 1000 нет.", ex.getMessage());
+        assertEquals("Пользователя с id = 1000 нет", ex.getMessage());
     }
 
     @Test

@@ -107,7 +107,6 @@ class FriendDbStorageTest {
         friendStorage.removeFriend(1L, 2L);
 
         LinkedHashMap<Long, User> friendsTest = new LinkedHashMap();
-        //friendsTest.put(1L, user2);
         friendsTest.put(2L, user3);
 
         assertEquals(friendsTest.values().stream().collect(Collectors.toList()),
