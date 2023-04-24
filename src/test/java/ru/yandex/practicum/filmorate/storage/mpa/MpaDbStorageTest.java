@@ -25,7 +25,7 @@ class MpaDbStorageTest {
 
     @Test
     void getMpaTest() {
-        Optional<MPA> mpaOptional = Optional.of(mpaStorage.getMpa(1));
+        Optional<MPA> mpaOptional = Optional.of(mpaStorage.getMpaById(1));
 
         assertThat(mpaOptional)
                 .isPresent()
@@ -42,10 +42,10 @@ class MpaDbStorageTest {
         NotFoundException ex = assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws IOException {
-                mpaStorage.getMpa(1000);
+                mpaStorage.getMpaById(1000);
             }
         });
 
-        assertEquals("Рейтинга с id = 1000 нет.", ex.getMessage());
+        assertEquals("Рейтинг(MPA) с id= 1000 не найден", ex.getMessage());
     }
 }

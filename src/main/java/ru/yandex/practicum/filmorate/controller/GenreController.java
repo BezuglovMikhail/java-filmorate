@@ -24,11 +24,11 @@ public class GenreController {
 
     @GetMapping
     public Collection<Genre> get() {
-        return genreService.get();
+        return genreService.getGenres();
     }
 
     @GetMapping("/{id}")
     public Genre getGenre(@PathVariable int id) {
-        return genreService.get(id);
+        return genreService.getGenreById(id);
     }
 }

@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -169,5 +170,93 @@ class UserDbStorageTest {
         assertEquals(usersTest.values().stream().collect(Collectors.toSet()),
                 userStorage.getUsers().stream().collect(Collectors.toSet()));
         assertEquals(1, userStorage.getUsers().size());
+    }
+
+    @Test
+    @Sql({"/schema.sql", "/data.sql"})
+    void addFriend() {
+        User user1 = new User();
+        user1.setEmail("mail@mail.ru");
+        user1.setName(null);
+        user1.setLogin("Log");
+        user1.setBirthday(LocalDate.of(2000, 11, 6));
+
+        userStorage.saveUser(user1);
+
+        User user2 = new User();
+        user2.setEmail("mail_test@mail.ru");
+        user2.setName("Log");
+        user2.setLogin("Log_test");
+        user2.setBirthday(LocalDate.of(1995, 11, 7));
+
+        userStorage.saveUser(user2);
+
+        User user3 = new User();
+        user3.setEmail("mail_test2@mail.ru");
+        user3.setName("Logan");
+        user3.setLogin("Log_test2");
+        user3.setBirthday(LocalDate.of(1998, 9, 7));
+
+        userStorage.saveUser(user3);
+
+        userStorage.addFriend(1L, 2L);
+        userStorage.addFriend(1L, 3L);
+        userStorage.addFriend(3L, 1L);
+
+        LinkedHashMap<Long, User> friendsTest = new LinkedHashMap();
+        friendsTest.put(1L, user2);
+        friendsTest.put(2L, user3);
+
+        LinkedHashMap<Long, User> friends1Test = new LinkedHashMap();
+        friends1Test.put(1L, user1);
+
+        LinkedHashMap<Long, User> friends0Test = new LinkedHashMap();
+
+        assertEquals(friendsTest.values().stream().collect(Collectors.toList()),
+                userStorage.getFriends(1L).stream().collect(Collectors.toList()));
+        assertEquals(friends1Test.values().stream().collect(Collectors.toList()),
+                userStorage.getFriends(3L).stream().collect(Collectors.toList()));
+        assertEquals(friends0Test.values().stream().collect(Collectors.toList()),
+                userStorage.getFriends(2L).stream().collect(Collectors.toList()));
+
+    }
+
+    @Test
+    @Sql({"/schema.sql", "/data.sql"})
+    void removeFriend() {
+        User user1 = new User();
+        user1.setEmail("mail@mail.ru");
+        user1.setName(null);
+        user1.setLogin("Log");
+        user1.setBirthday(LocalDate.of(2000, 11, 6));
+
+        userStorage.saveUser(user1);
+
+        User user2 = new User();
+        user2.setEmail("mail_test@mail.ru");
+        user2.setName("Log");
+        user2.setLogin("Log_test");
+        user2.setBirthday(LocalDate.of(1995, 11, 7));
+
+        userStorage.saveUser(user2);
+
+        User user3 = new User();
+        user3.setEmail("mail_test2@mail.ru");
+        user3.setName("Logan");
+        user3.setLogin("Log_test2");
+        user3.setBirthday(LocalDate.of(1998, 9, 7));
+
+        userStorage.saveUser(user3);
+
+        userStorage.addFriend(1L, 2L);
+        userStorage.addFriend(1L, 3L);
+        userStorage.addFriend(3L, 1L);
+        userStorage.removeFriend(1L, 2L);
+
+        LinkedHashMap<Long, User> friendsTest = new LinkedHashMap();
+        friendsTest.put(2L, user3);
+
+        assertEquals(friendsTest.values().stream().collect(Collectors.toList()),
+                userStorage.getFriends(1L).stream().collect(Collectors.toList()));
     }
 }

@@ -26,12 +26,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
         }
-            if (films.containsKey(film.getId())) {
-               films.put(film.getId(), film);
-            } else {
-                film.setId(generateId());
-                films.put(film.getId(), film);
-            }
+        if (films.containsKey(film.getId())) {
+            films.put(film.getId(), film);
+        } else {
+            film.setId(generateId());
+            films.put(film.getId(), film);
+        }
 
         return films.values().stream()
                 .filter(x -> Objects.equals(x.getName(), film.getName()))
@@ -46,19 +46,19 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!films.containsKey(film.getId()) && film.getId() != 0) {
             throw new NotFoundException("Фильма с id = " + film.getId() + " нет.");
         }
-            if (films.containsKey(film.getId())) {
-                films.put(film.getId(), film);
-            }
+        if (films.containsKey(film.getId())) {
+            films.put(film.getId(), film);
+        }
 
         return films.values().stream()
-               .filter(x -> Objects.equals(x.getName(), film.getName()))
+                .filter(x -> Objects.equals(x.getName(), film.getName()))
                 .findFirst();
     }
 
     @Override
     public Film removeFilm(Film film) {
-       films.remove(film.getId());
-       return film;
+        films.remove(film.getId());
+        return film;
     }
 
     @Override
@@ -85,19 +85,21 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(filmId);
     }
 
-    public Film addLike(long filmId, long userId) {
+    @Override
+    public void addLike(Long userId, Long filmId) {
         if (!films.containsKey(filmId)) {
             throw new NotFoundException(String.format("Фильм с id = %s не найден.", filmId));
         }
         films.get(filmId).getLikes().add(userId);
-        return films.get(filmId);
     }
 
-    public void deleteLike(long userId, long filmId) {
-         films.get(filmId).getLikes().remove(userId);
+    @Override
+    public void removeLike(Long filmId, Long userId) {
+        films.get(filmId).getLikes().remove(userId);
     }
 
-    public List<Film> findPopularFilms(Integer count) {
+    @Override
+    public Collection<Film> getPopular(int count) {
         return films.values().stream()
                 .sorted(this::compare)
                 .limit(count)

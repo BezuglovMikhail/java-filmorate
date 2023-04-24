@@ -1,14 +1,14 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 @Data
 public class InMemoryUserStorage implements UserStorage {
 
@@ -71,26 +71,28 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
-    public User addFriend(long id, long idNewFriend) {
-        if (!users.containsKey(id) && id != 0) {
-            throw new NotFoundException("Пользователя с id = " + id + " нет.");
+    @Override
+    public void addFriend(Long userId, Long friendId) {
+        if (!users.containsKey(userId) && userId != 0) {
+            throw new NotFoundException("Пользователя с id = " + userId + " нет.");
         }
-        if (!users.containsKey(idNewFriend) && idNewFriend != 0) {
-            throw new NotFoundException("Пользователя с id = " + idNewFriend + " нет.");
+        if (!users.containsKey(friendId) && friendId != 0) {
+            throw new NotFoundException("Пользователя с id = " + friendId + " нет.");
         }
-        users.get(id).getFriends().add(idNewFriend);
-        users.get(idNewFriend).getFriends().add(id);
-        return users.get(idNewFriend);
+        users.get(userId).getFriends().add(friendId);
+        users.get(friendId).getFriends().add(userId);
     }
 
-    public void deleteFriend(long id, long idDeleteFriend) {
-        users.get(id).getFriends().remove(idDeleteFriend);
-        users.get(idDeleteFriend).getFriends().remove(id);
+    @Override
+    public void removeFriend(Long userId, Long friendId) {
+        users.get(userId).getFriends().remove(friendId);
+        users.get(friendId).getFriends().remove(userId);
     }
 
-    public Set<User> findFriendsByIdUser(long id) {
+    @Override
+    public Collection<User> getFriends(Long userId) {
         return users.values().stream()
-                .filter(x -> users.get(id).getFriends().contains(x.getId()))
+                .filter(x -> users.get(userId).getFriends().contains(x.getId()))
                 .sorted(Comparator.comparing(User::getId))
                 .collect(Collectors.toSet());
     }

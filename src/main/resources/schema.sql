@@ -5,7 +5,9 @@ CREATE TABLE if not exists users (
   email varchar(20),
   login varchar(20),
   user_name varchar(20),
-  birthday date
+  birthday date,
+  constraint uq1 unique (email),
+  constraint uq2 unique (login)
 );
 
 CREATE TABLE if not exists mpa (

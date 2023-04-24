@@ -1,13 +1,18 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 @Repository
+@Slf4j
 public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,5 +46,26 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public void removeGenres(Film film) {
         jdbcTemplate.update("DELETE FROM film_genres WHERE film_id = ?", film.getId());
+    }
+
+    @Override
+    public Collection<Genre> getGenres() {
+        return jdbcTemplate.query("SELECT * FROM genres", ((rs, rowNum) -> new Genre(
+                rs.getInt("genre_id"),
+                rs.getString("genre_name"))
+        ));
+    }
+
+    @Override
+    public Genre getGenreById(int genreId) {
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT genre_name FROM genres WHERE genre_id = ?", genreId);
+        if (genreRows.next()) {
+            Genre genre = new Genre(
+                    genreId,
+                    genreRows.getString("genre_name")
+            );
+            log.info("Найденный жанр = {} ", genre);
+            return genre;
+        } else throw new NotFoundException(String.format("Жанр с id= " + genreId + " не найден"));
     }
 }

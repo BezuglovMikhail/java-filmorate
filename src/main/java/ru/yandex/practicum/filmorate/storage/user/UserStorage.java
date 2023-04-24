@@ -19,4 +19,10 @@ public interface UserStorage {
     Optional<User> findUserById(Long useId);
 
     User removeUser(User user);
+
+    void addFriend(Long userId, Long friendId);
+
+    void removeFriend(Long userId, Long friendId);
+
+    Collection<User> getFriends(Long userId);
 }

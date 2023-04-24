@@ -2,14 +2,12 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.like.LikesDbStorage;
-import ru.yandex.practicum.filmorate.storage.like.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -24,12 +22,9 @@ public class FilmService {
     private FilmStorage filmStorage;
     private UserStorage userStorage;
 
-    private LikesStorage likesStorage;
-
     @Autowired
-    public FilmService(FilmDbStorage filmDbStorage, LikesDbStorage likesDbStorage) {
-        this.filmStorage = filmDbStorage;
-        this.likesStorage = likesDbStorage;
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
     }
 
     public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
@@ -45,11 +40,11 @@ public class FilmService {
     }
 
     public Film updateFilm(Film film) {
-         getFilmStorage().updateFilm(film);
-         Film filmGenres = filmStorage.findFilmById(film.getId());
-         if (film.getGenres() == null) {
-             filmGenres.setGenres(new HashSet<>());
-         }
+        getFilmStorage().updateFilm(film);
+        Film filmGenres = filmStorage.findFilmById(film.getId());
+        if (film.getGenres() == null) {
+            filmGenres.setGenres(new HashSet<>());
+        }
         return filmGenres;
     }
 
@@ -66,14 +61,14 @@ public class FilmService {
     }
 
     public void addLike(long filmId, long userId) {
-        likesStorage.addLike(userId, filmId);
+        filmStorage.addLike(userId, filmId);
     }
 
     public void deleteLike(long userId, long filmId) {
-        likesStorage.removeLike(userId, filmId);
+        filmStorage.removeLike(userId, filmId);
     }
 
     public Collection<Film> findPopularFilms(Integer count) {
-        return likesStorage.getPopular(count);
+        return filmStorage.getPopular(count);
     }
 }

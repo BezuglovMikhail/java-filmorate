@@ -2,12 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.friends.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
@@ -17,12 +16,10 @@ import java.util.stream.Collectors;
 @Data
 public class UserService {
     private UserStorage userStorage;
-    private FriendStorage friendStorage;
 
     @Autowired
-    public UserService(UserDbStorage userDbStorage, FriendStorage friendStorage) {
-        this.userStorage = userDbStorage;
-        this.friendStorage = friendStorage;
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
@@ -30,36 +27,36 @@ public class UserService {
     }
 
     public Optional<User> addUser(User user) {
-        return getUserStorage().saveUser(user);
+        return userStorage.saveUser(user);
     }
 
     public Optional<User> updateUser(User user) {
-            return getUserStorage().updateUser(user);
+        return userStorage.updateUser(user);
     }
 
     public void createFriend(long userId, long idNewFriend) {
-        getFriendStorage().addFriend(userId, idNewFriend);
+        userStorage.addFriend(userId, idNewFriend);
     }
 
     public void deleteFriend(long userId, long idDeleteFriend) {
-        getFriendStorage().removeFriend(userId, idDeleteFriend);
+        userStorage.removeFriend(userId, idDeleteFriend);
     }
 
     public Optional<User> findByIdUser(long userId) {
-        return getUserStorage().findUserById(userId);
+        return userStorage.findUserById(userId);
     }
 
     public Collection<User> findAll() {
-        return getUserStorage().getUsers();
+        return userStorage.getUsers();
     }
 
     public Collection<User> findFriendsByIdUser(@PathVariable long id) {
-        return friendStorage.getFriends(id);
+        return userStorage.getFriends(id);
     }
 
     public Collection<User> findAllGenerateFriends(long id, long otherId) {
-        return friendStorage.getFriends(id).stream()
-                .filter(x -> friendStorage.getFriends(otherId).contains(x))
+        return userStorage.getFriends(id).stream()
+                .filter(x -> userStorage.getFriends(otherId).contains(x))
                 .collect(Collectors.toList());
     }
 }

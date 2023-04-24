@@ -11,7 +11,7 @@ public interface FilmStorage {
 
     Optional<Film> saveFilm(Film film);
 
-   Optional<Film> updateFilm(Film film);
+    Optional<Film> updateFilm(Film film);
 
     Film removeFilm(Film film);
 
@@ -20,4 +20,10 @@ public interface FilmStorage {
     Collection<Film> getFilms();
 
     Film findFilmById(Long filmId);
+
+    void addLike(Long userId, Long filmId);
+
+    void removeLike(Long filmId, Long userId);
+
+    Collection<Film> getPopular(int count);
 }
