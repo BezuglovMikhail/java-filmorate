@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Optional;
 
 public interface UserStorage {
@@ -10,7 +10,19 @@ public interface UserStorage {
 
     Optional<User> saveUser(User user);
 
-    boolean validateUser(User user);
+    Optional<User> updateUser(User user);
 
-    HashMap<Long, User> getUsers();
+    boolean validateUser(Long userId);
+
+    Collection<User> getUsers();
+
+    Optional<User> findUserById(Long useId);
+
+    User removeUser(User user);
+
+    void addFriend(Long userId, Long friendId);
+
+    void removeFriend(Long userId, Long friendId);
+
+    Collection<User> getFriends(Long userId);
 }

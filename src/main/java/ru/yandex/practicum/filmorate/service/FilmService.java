@@ -2,81 +2,73 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Data
 public class FilmService {
     private FilmStorage filmStorage;
-
     private UserStorage userStorage;
 
     @Autowired
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
+    }
+
     public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
         this.filmStorage = inMemoryFilmStorage;
         this.userStorage = inMemoryUserStorage;
     }
 
     public Optional<Film> addFilm(Film film) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Дата релиза не может быть раньше: 28.12.1895");
+        }
         return getFilmStorage().saveFilm(film);
     }
 
-    public Film addLike(long filmId, long userId) {
-        if (!getFilmStorage().getFilms().containsKey(filmId)) {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
+    public Film updateFilm(Film film) {
+        getFilmStorage().updateFilm(film);
+        Film filmGenres = filmStorage.findFilmById(film.getId());
+        if (film.getGenres() == null) {
+            filmGenres.setGenres(new HashSet<>());
         }
-        if (!getUserStorage().getUsers().containsKey(userId)) {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
-        }
-        getFilmStorage().getFilms().get(filmId).getLikes().add(userId);
-        return getFilmStorage().getFilms().get(filmId);
+        return filmGenres;
     }
 
-    public Collection<Film> findAllFilms() {
-        return getFilmStorage().getFilms().values();
+    public Film removeFilm(Film film) {
+        return getFilmStorage().removeFilm(film);
     }
 
     public Film findByIdFilm(Long filmId) {
-        if (!getFilmStorage().getFilms().containsKey(filmId)) {
-            throw new FilmNotFoundException(String.format("Фильм с id = %s не найден.", filmId));
-        }
-        return getFilmStorage().getFilms().get(filmId);
+        return getFilmStorage().findFilmById(filmId);
     }
 
+    public Collection<Film> findAllFilms() {
+        return getFilmStorage().getFilms();
+    }
+
+    public void addLike(long filmId, long userId) {
+        filmStorage.addLike(userId, filmId);
+    }
 
     public void deleteLike(long userId, long filmId) {
-        getFilmStorage().getFilms().get(filmId).getLikes().remove(userId);
+        filmStorage.removeLike(userId, filmId);
     }
 
-    public List<Film> findPopularFilms(Integer count) {
-        return getFilmStorage().getFilms().values().stream()
-                .sorted(this::compare)
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
-    private int compare(Film p0, Film p1) {
-        if (p0.getLikes().size() == p1.getLikes().size()) {
-            return 0;
-        }
-        if (p0.getLikes().size() < p1.getLikes().size()) {
-            return 1;
-        }
-        if (p0.getLikes().size() > p1.getLikes().size()) {
-            return -1;
-        }
-        return -2;
+    public Collection<Film> findPopularFilms(Integer count) {
+        return filmStorage.getPopular(count);
     }
 }

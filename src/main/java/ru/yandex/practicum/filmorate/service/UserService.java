@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.yandex.practicum.filmorate.exeption.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -15,57 +15,48 @@ import java.util.stream.Collectors;
 @Service
 @Data
 public class UserService {
-    @Autowired
     private UserStorage userStorage;
 
     @Autowired
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
+
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
         this.userStorage = inMemoryUserStorage;
     }
 
     public Optional<User> addUser(User user) {
-        return getUserStorage().saveUser(user);
+        return userStorage.saveUser(user);
     }
 
-    public User createFriend(long id, long idNewFriend) {
-        getUserStorage().validateUser(getUserStorage().getUsers().get(id));
-        getUserStorage().validateUser(getUserStorage().getUsers().get(idNewFriend));
-        getUserStorage().getUsers().get(id).getFriends().add(idNewFriend);
-        getUserStorage().getUsers().get(idNewFriend).getFriends().add(id);
-        return getUserStorage().getUsers().get(idNewFriend);
+    public Optional<User> updateUser(User user) {
+        return userStorage.updateUser(user);
     }
 
-    public void deleteFriend(long id, long idDeleteFriend) {
-        getUserStorage().getUsers().get(id).getFriends().remove(idDeleteFriend);
-        getUserStorage().getUsers().get(idDeleteFriend).getFriends().remove(id);
+    public void createFriend(long userId, long idNewFriend) {
+        userStorage.addFriend(userId, idNewFriend);
     }
 
-    public User findByIdUser(long userId) {
-        if (!getUserStorage().getUsers().containsKey(userId)) {
-            throw new UserNotFoundException(String.format("Пользователь с id = %s не найден.", userId));
-        }
-        return getUserStorage().getUsers().get(userId);
+    public void deleteFriend(long userId, long idDeleteFriend) {
+        userStorage.removeFriend(userId, idDeleteFriend);
+    }
+
+    public Optional<User> findByIdUser(long userId) {
+        return userStorage.findUserById(userId);
     }
 
     public Collection<User> findAll() {
-        return getUserStorage().getUsers().values();
+        return userStorage.getUsers();
     }
 
-    public List<User> findFriendsByIdUser(@PathVariable long id) {
-        return getUserStorage().getUsers().values().stream()
-                .filter(x -> getUserStorage().getUsers().get(id).getFriends().contains(x.getId()))
-                .sorted(Comparator.comparing(User::getId))
-                .collect(Collectors.toList());
+    public Collection<User> findFriendsByIdUser(@PathVariable long id) {
+        return userStorage.getFriends(id);
     }
 
-    public List<User> findAllGenerateFriends(long id, long otherId) {
-        List<Long> generalFriends = getUserStorage().getUsers().get(id).getFriends().stream()
-                .filter(getUserStorage().getUsers().get(otherId).getFriends()::contains)
-                .collect(Collectors.toList());
-
-        return getUserStorage().getUsers().values().stream()
-                .filter(x -> generalFriends.contains(x.getId()))
-                .sorted(Comparator.comparing(User::getId))
+    public Collection<User> findAllGenerateFriends(long id, long otherId) {
+        return userStorage.getFriends(id).stream()
+                .filter(x -> userStorage.getFriends(otherId).contains(x))
                 .collect(Collectors.toList());
     }
 }

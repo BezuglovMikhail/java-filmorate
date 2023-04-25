@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Optional;
 
 public interface FilmStorage {
@@ -11,7 +11,19 @@ public interface FilmStorage {
 
     Optional<Film> saveFilm(Film film);
 
-    boolean validateFilm(Film film);
+    Optional<Film> updateFilm(Film film);
 
-    HashMap<Long, Film> getFilms();
+    Film removeFilm(Film film);
+
+    boolean validateFilm(Long filmId);
+
+    Collection<Film> getFilms();
+
+    Film findFilmById(Long filmId);
+
+    void addLike(Long userId, Long filmId);
+
+    void removeLike(Long filmId, Long userId);
+
+    Collection<Film> getPopular(int count);
 }
