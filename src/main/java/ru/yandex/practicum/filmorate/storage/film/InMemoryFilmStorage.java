@@ -49,7 +49,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         }
-
         return films.values().stream()
                 .filter(x -> Objects.equals(x.getName(), film.getName()))
                 .findFirst();

@@ -26,13 +26,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Sql({"/schema.sql", "/data.sql"})
 class FilmDbStorageTest {
 
     private final FilmDbStorage filmStorage;
     private final UserDbStorage userStorage;
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void saveAndFindByIdFilm() {
         Film film1 = new Film();
         film1.setName("Deadpool 3");
@@ -60,7 +60,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void updateFilm() {
         Film film1 = new Film();
         film1.setName("Deadpool 3");
@@ -98,7 +97,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void removeFilm() {
         Film film1 = new Film();
         film1.setName("Deadpool 3");
@@ -130,7 +128,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void validateFalseIdFilm() {
         Film film1 = new Film();
         film1.setName("Deadpool 3");
@@ -160,7 +157,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void getFilms() {
 
         Film film1 = new Film();
@@ -191,7 +187,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void addLike() {
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
@@ -241,7 +236,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void removeLike() {
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
@@ -293,7 +287,6 @@ class FilmDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void getPopular() {
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
