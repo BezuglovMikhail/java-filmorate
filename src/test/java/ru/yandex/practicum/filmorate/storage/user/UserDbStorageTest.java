@@ -23,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Sql({"/schema.sql", "/data.sql"})
 class UserDbStorageTest {
 
     private final UserDbStorage userStorage;
 
-    @Sql({"/schema.sql", "/data.sql"})
     @Test
     void saveAndFindUserByIdUserTest() {
         User user1 = new User();
@@ -52,7 +52,6 @@ class UserDbStorageTest {
                 );
     }
 
-    @Sql({"/schema.sql", "/data.sql"})
     @Test
     void updateUserTest() {
         User user1 = new User();
@@ -85,7 +84,6 @@ class UserDbStorageTest {
                 );
     }
 
-    @Sql({"/schema.sql", "/data.sql"})
     @Test
     void validateUserTest() {
 
@@ -114,7 +112,6 @@ class UserDbStorageTest {
         assertEquals("Пользователя с id = 1000 нет.", ex.getMessage());
     }
 
-    @Sql({"/schema.sql", "/data.sql"})
     @Test
     void getUsersTest() {
         User user = new User();
@@ -143,7 +140,6 @@ class UserDbStorageTest {
 
     }
 
-    @Sql({"/schema.sql", "/data.sql"})
     @Test
     void removeUserTest() {
         User user = new User();
@@ -173,7 +169,6 @@ class UserDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void addFriend() {
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
@@ -222,7 +217,6 @@ class UserDbStorageTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     void removeFriend() {
         User user1 = new User();
         user1.setEmail("mail@mail.ru");
